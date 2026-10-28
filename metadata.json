@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix لَمْ أَكُنْ عَابِراً.. وَلَنْ تَكُونِي",
+  "description": "إصدار خاص — 4 نوفمبر - الميثاق الرصين ومتن الكتاب العربي الكامل",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
