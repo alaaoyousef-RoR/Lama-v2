@@ -614,15 +614,15 @@ export default function App() {
         aria-hidden="true"
       />
 
-      {/* Persistent YouTube Background Audio Player */}
+      {/* Persistent Single Background Audio Player (Baram Piano) */}
       {isAudioPlaying && (
         <div className="sr-only pointer-events-none" aria-hidden="true">
           <iframe
             id="bg-music-iframe"
             width="1"
             height="1"
-            src="https://www.youtube.com/embed/5g-s5WvLLek?autoplay=1&loop=1&playlist=5g-s5WvLLek&enablejsapi=1"
-            title="Background Music"
+            src="https://www.youtube.com/embed/uzwvOGQHH1o?autoplay=1&loop=1&playlist=uzwvOGQHH1o&enablejsapi=1"
+            title="Background Music - Baram Piano"
             allow="autoplay"
           />
         </div>
