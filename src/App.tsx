@@ -12,6 +12,13 @@ import {
 } from 'lucide-react';
 import { MANUSCRIPT_DOORS, SPECIAL_SECTIONS } from './manuscriptData';
 
+declare global {
+  interface Window {
+    YT: any;
+    onYouTubeIframeAPIReady: any;
+  }
+}
+
 
 
 interface AudioVinylCardProps {
@@ -309,13 +316,49 @@ export default function App() {
   // Accordion state management (all collapsed by default)
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
 
+  const ytPlayerRef = useRef<any>(null);
+
+  useEffect(() => {
+    const initPlayer = () => {
+      if (window.YT && window.YT.Player && !ytPlayerRef.current) {
+        ytPlayerRef.current = new window.YT.Player('bg-youtube-player', {
+          videoId: 'uzwvOGQHH1o',
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            loop: 1,
+            playlist: 'uzwvOGQHH1o',
+            playsinline: 1,
+            rel: 0,
+            modestbranding: 1,
+          },
+          events: {
+            onReady: () => {
+              // Player ready
+            },
+          },
+        });
+      }
+    };
+
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag?.parentNode?.insertBefore(tag, firstScriptTag);
+      window.onYouTubeIframeAPIReady = initPlayer;
+    } else {
+      initPlayer();
+    }
+  }, []);
+
   const handleReturnToGate = () => {
     localStorage.removeItem('sanctuary_unlocked');
     setUnlocked(false);
     setShowGate(false);
     setPassphrase('');
     setExpandedSections({});
-    setIsAudioPlaying(false);
+    pauseAudio();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -372,8 +415,34 @@ export default function App() {
   // Background YouTube audio state
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
 
+  const startAudio = () => {
+    setIsAudioPlaying(true);
+    try {
+      if (ytPlayerRef.current && ytPlayerRef.current.playVideo) {
+        ytPlayerRef.current.playVideo();
+      }
+    } catch (err) {
+      console.error('Audio play error:', err);
+    }
+  };
+
+  const pauseAudio = () => {
+    setIsAudioPlaying(false);
+    try {
+      if (ytPlayerRef.current && ytPlayerRef.current.pauseVideo) {
+        ytPlayerRef.current.pauseVideo();
+      }
+    } catch (err) {
+      console.error('Audio pause error:', err);
+    }
+  };
+
   const toggleAudio = () => {
-    setIsAudioPlaying((prev) => !prev);
+    if (isAudioPlaying) {
+      pauseAudio();
+    } else {
+      startAudio();
+    }
   };
 
   // Restore scroll position on unlock
@@ -417,7 +486,7 @@ export default function App() {
       setIsUnlockingAnimation(true);
       setErrorMsg(false);
       setShake(false);
-      setIsAudioPlaying(true);
+      startAudio();
       setTimeout(() => {
         localStorage.setItem('sanctuary_unlocked', 'true');
         setUnlocked(true);
@@ -614,19 +683,22 @@ export default function App() {
         aria-hidden="true"
       />
 
-      {/* Persistent Single Background Audio Player (Baram Piano) */}
-      {isAudioPlaying && (
-        <div className="sr-only pointer-events-none" aria-hidden="true">
-          <iframe
-            id="bg-music-iframe"
-            width="1"
-            height="1"
-            src="https://www.youtube.com/embed/uzwvOGQHH1o?autoplay=1&loop=1&playlist=uzwvOGQHH1o&enablejsapi=1"
-            title="Background Music - Baram Piano"
-            allow="autoplay"
-          />
-        </div>
-      )}
+      {/* Permanent hidden YouTube background container */}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '-1000px',
+          left: '-1000px',
+          width: '200px',
+          height: '200px',
+          opacity: 0.01,
+          pointerEvents: 'none',
+          zIndex: -1,
+        }}
+        aria-hidden="true"
+      >
+        <div id="bg-youtube-player" />
+      </div>
 
       {/* Screen 1: The Threshold Gate */}
       {!unlocked && !showGate && (
@@ -670,7 +742,7 @@ export default function App() {
             {/* Explicit Interactive Audio Toggle Pill */}
             <button
               type="button"
-              onClick={() => setIsAudioPlaying(prev => !prev)}
+              onClick={toggleAudio}
               className="mb-3 mx-auto flex items-center justify-center gap-2 px-4 py-1.5 rounded-full border border-[#410407]/40 bg-[#FAF6F0] text-[#851A26] text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
             >
               <span>♫</span>
@@ -680,7 +752,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => {
-                setIsAudioPlaying(true);
+                startAudio();
                 setShowGate(true);
               }}
               className="bg-[#851A26] hover:bg-[#68141F] text-[#FAF6F0] border-[1.5px] border-[#410407] text-base sm:text-lg cursor-pointer px-9 py-3.5 rounded-full transition-all duration-300 flex items-center gap-2.5 outline-none shadow-[3px_3px_0px_#410407] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none font-bold"
