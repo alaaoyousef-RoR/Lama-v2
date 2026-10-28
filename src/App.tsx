@@ -657,11 +657,31 @@ export default function App() {
               </h1>
             </div>
 
+            {/* Tender Request Reading Note */}
+            <div className="my-5 px-4 py-3 rounded-2xl bg-[#FFFDF9]/95 border border-[#410407]/20 text-center max-w-[340px] mx-auto shadow-sm">
+              <p className="text-[#410407] text-sm sm:text-base leading-relaxed font-['Scheherazade_New',serif] m-0 font-medium">
+                «حتى لو اخترتِ البُعد، وحتى لو كان الصمت بيننا ثقيلاً..
+                لي طلبٌ واحد هو كل ما أرجوه منكِ اليوم:
+                اقرئي هذا الكتاب.. كلمةً كلمة، وسطراً سطراً، حتى آخر نقطةٍ فيه،
+                وشغّلي المعزوفة لترافقكِ بين السطور، كما رافقت تفاصيلنا دائمًا.»
+              </p>
+            </div>
+
+            {/* Explicit Interactive Audio Toggle Pill */}
+            <button
+              type="button"
+              onClick={() => setIsAudioPlaying(prev => !prev)}
+              className="mb-3 mx-auto flex items-center justify-center gap-2 px-4 py-1.5 rounded-full border border-[#410407]/40 bg-[#FAF6F0] text-[#851A26] text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
+            >
+              <span>♫</span>
+              <span>{isAudioPlaying ? "المعزوفة قيد التشغيل ♫" : "تشغيل المعزوفة المرافقة ♫"}</span>
+            </button>
+
             <button
               type="button"
               onClick={() => {
-                setShowGate(true);
                 setIsAudioPlaying(true);
+                setShowGate(true);
               }}
               className="bg-[#851A26] hover:bg-[#68141F] text-[#FAF6F0] border-[1.5px] border-[#410407] text-base sm:text-lg cursor-pointer px-9 py-3.5 rounded-full transition-all duration-300 flex items-center gap-2.5 outline-none shadow-[3px_3px_0px_#410407] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none font-bold"
             >
@@ -783,6 +803,20 @@ export default function App() {
               اطوي كل الأبواب
             </button>
           </div>
+        </div>
+
+        {/* Archival Dedication Banner */}
+        <div className="mb-8 p-6 rounded-2xl bg-[#FFFDF9]/95 border border-[#68252E]/20 shadow-sm text-center max-w-[620px] mx-auto">
+          <div className="flex items-center justify-center gap-2 mb-3 text-[#68252E]/60 text-xs tracking-widest font-mono">
+            <span>✦</span>
+            <span>وثيقة ما بين ١٢ أكتوبر و ٢ نوفمبر</span>
+            <span>✦</span>
+          </div>
+          <p className="text-[#332A27] text-base sm:text-lg leading-[2.1] font-['Scheherazade_New',serif] font-medium m-0">
+            «كُتِبَتْ هذه النُّصوصُ في ليالٍ امتدّت ما بين الثاني عشر من أكتوبر وحتى الثاني من نوفمبر.. 
+            كنتُ أعودُ في كلّ ليلةٍ يفيضُ فيها الشّوقُ إلى مذكراتِنا، أخطّ سطراً وأستحضرُ روحكِ في كل تفصيل، لتكونَ هذه الكلماتُ هديتي الصادقة إليكِ في يوم مولدي.. 
+            لأقولَ لكِ بملءِ هذا اليقين: إن كان للعالمِ ميلادٌ يُحتفلُ به، فميلادي الحقيقيّ كانَ أنتِ.»
+          </p>
         </div>
 
         {/* 1. إلى لَمَاتي */}
