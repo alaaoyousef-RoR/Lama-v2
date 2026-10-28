@@ -7,6 +7,7 @@ import {
   Play,
   Pause,
   X,
+  Lock,
 } from 'lucide-react';
 import { MANUSCRIPT_DOORS, SPECIAL_SECTIONS } from './manuscriptData';
 
@@ -102,58 +103,8 @@ class AmbientSoundscape {
   }
 }
 
-// Bespoke Tactile 3D Wax Seal Emblem Component
-function WaxSeal({
-  className = 'w-20 h-20',
-  glowing = true,
-}: {
-  className?: string;
-  glowing?: boolean;
-}) {
-  return (
-    <div className={`relative flex items-center justify-center select-none ${className}`}>
-      {glowing && (
-        <div className="absolute inset-0 rounded-full bg-[#851A26] blur-xl opacity-50 animate-pulse pointer-events-none" />
-      )}
-      <svg viewBox="0 0 100 100" className="w-full h-full relative z-10 drop-shadow-[0_8px_20px_rgba(65,4,7,0.45)]">
-        <defs>
-          <radialGradient id="waxGrad" cx="35%" cy="35%" r="65%">
-            <stop offset="0%" stopColor="#A82836" />
-            <stop offset="50%" stopColor="#851A26" />
-            <stop offset="85%" stopColor="#5E0F19" />
-            <stop offset="100%" stopColor="#410407" />
-          </radialGradient>
-          <radialGradient id="innerGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="60%" stopColor="#851A26" stopOpacity="0" />
-            <stop offset="100%" stopColor="#AE9189" stopOpacity="0.45" />
-          </radialGradient>
-        </defs>
-        <path
-          d="M50 5 C62 4, 73 10, 80 18 C88 25, 94 36, 95 48 C96 60, 91 72, 83 81 C75 90, 63 96, 50 95 C37 96, 25 90, 17 81 C9 72, 4 60, 5 48 C4 36, 10 25, 18 18 C25 10, 38 4, 50 5 Z"
-          fill="url(#waxGrad)"
-          stroke="#410407"
-          strokeWidth="1.5"
-        />
-        <circle cx="50" cy="50" r="38" fill="none" stroke="#410407" strokeWidth="2.5" />
-        <circle cx="50" cy="50" r="35" fill="none" stroke="#FAF6F0" strokeOpacity="0.6" strokeWidth="1" strokeDasharray="3 2" />
-        <circle cx="50" cy="50" r="32" fill="url(#innerGlow)" />
-        <path
-          d="M50 29 C43 22, 33 25, 33 34 C33 45, 50 58, 50 58 C50 58, 67 45, 67 34 C67 25, 57 22, 50 29 Z"
-          fill="none"
-          stroke="#FAF6F0"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle cx="50" cy="70" r="2.5" fill="#E6D6C5" />
-      </svg>
-    </div>
-  );
-}
-
-// Retro Vinyl Audio Card Interlude Component
 interface AudioVinylCardProps {
-  interludeNumberText: string;
+  interludeBadge: string;
   trackTitle: string;
   artist: string;
   songQuote: string;
@@ -162,7 +113,7 @@ interface AudioVinylCardProps {
 }
 
 function AudioVinylCard({
-  interludeNumberText,
+  interludeBadge,
   trackTitle,
   artist,
   songQuote,
@@ -172,63 +123,63 @@ function AudioVinylCard({
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   return (
-    <aside className="interlude-vinyl-card border-[1.8px] border-[#410407] bg-[#F6ECE8] shadow-[6px_6px_0px_#410407] rounded-[28px] p-6 sm:p-8 my-10 relative overflow-hidden transition-all duration-300">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-5 pb-5 border-b border-[#410407]/20">
-        <div className="flex items-center gap-4 w-full md:w-auto">
-          {/* Retro Vinyl Record Icon with animated grooves */}
+    <aside className="interlude-vinyl-card border-[1.8px] border-[#410407] bg-[#F6ECE8] shadow-[6px_6px_0px_#410407] rounded-[28px] p-5 sm:p-7 my-8 relative overflow-hidden transition-all duration-300">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 pb-4 border-b border-[#410407]/20">
+        <div className="flex items-center gap-3.5 w-full md:w-auto">
+          {/* Animated Vinyl Disc */}
           <div
-            className={`w-16 h-16 rounded-full bg-[#1A1817] border-2 border-[#410407] flex items-center justify-center relative shadow-md shrink-0 ${
+            className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#1A1817] border-2 border-[#410407] flex items-center justify-center relative shadow-md shrink-0 ${
               isPlaying ? 'animate-[spin_6s_linear_infinite]' : ''
             }`}
           >
-            <div className="w-12 h-12 rounded-full border border-neutral-700/60 flex items-center justify-center">
-              <div className="w-6 h-6 rounded-full bg-[#851A26] border border-[#FAF6F0] flex items-center justify-center shadow-inner">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-neutral-700/60 flex items-center justify-center">
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#851A26] border border-[#FAF6F0] flex items-center justify-center shadow-inner">
                 <div className="w-2 h-2 rounded-full bg-[#410407]" />
               </div>
             </div>
           </div>
 
           <div className="text-right">
-            <span className="inline-block px-3 py-1 rounded-full bg-[#851A26] text-[#FAF6F0] text-xs font-bold mb-1 shadow-sm">
-              {interludeNumberText} (فاصل غنائي معتمد)
+            <span className="inline-block px-3 py-0.5 rounded-full bg-[#851A26] text-[#FAF6F0] text-[11px] sm:text-xs font-bold mb-1 shadow-sm">
+              {interludeBadge}
             </span>
-            <h4 className="text-xl md:text-2xl font-bold text-[#410407] font-['Scheherazade_New',serif] m-0">
+            <h4 className="text-lg sm:text-2xl font-bold text-[#410407] font-['Scheherazade_New',serif] m-0">
               {trackTitle}
             </h4>
-            <span className="text-sm font-semibold text-[#851A26]">{artist}</span>
+            <span className="text-xs sm:text-sm font-semibold text-[#851A26]">{artist}</span>
           </div>
         </div>
 
-        {/* Inline Audio Player Toggle Button */}
+        {/* Play/Pause Button */}
         <button
           type="button"
           onClick={() => setIsPlaying(!isPlaying)}
-          className="bg-[#851A26] hover:bg-[#68141F] text-[#FAF6F0] border-[1.5px] border-[#410407] text-sm font-bold px-5 py-2.5 rounded-full cursor-pointer transition-all duration-200 shadow-[3px_3px_0px_#410407] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center gap-2 outline-none shrink-0"
+          className="bg-[#851A26] hover:bg-[#68141F] text-[#FAF6F0] border-[1.5px] border-[#410407] text-xs sm:text-sm font-bold px-4 py-2 rounded-full cursor-pointer transition-all duration-200 shadow-[3px_3px_0px_#410407] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center gap-2 outline-none shrink-0"
         >
           {isPlaying ? (
             <>
-              <Pause className="w-4 h-4 fill-current" />
+              <Pause className="w-3.5 h-3.5 fill-current" />
               <span>إيقاف المشغل</span>
             </>
           ) : (
             <>
-              <Play className="w-4 h-4 fill-current" />
+              <Play className="w-3.5 h-3.5 fill-current" />
               <span>استمع إلى الأغنية</span>
             </>
           )}
         </button>
       </div>
 
-      {/* Song Quote Banner */}
-      <div className="my-4 p-4 rounded-2xl bg-[#FFFDF9] border border-[#410407]/30 text-center shadow-sm">
-        <p className="m-0 text-[#851A26] text-lg md:text-xl font-bold italic font-['Scheherazade_New',serif]">
+      {/* Quote Banner */}
+      <div className="my-3.5 p-3 sm:p-4 rounded-xl bg-[#FFFDF9] border border-[#410407]/30 text-center shadow-sm">
+        <p className="m-0 text-[#851A26] text-base sm:text-xl font-bold italic font-['Scheherazade_New',serif]">
           «{songQuote}»
         </p>
       </div>
 
       {/* Embedded YouTube Audio Player */}
       {isPlaying && (
-        <div className="my-4 rounded-2xl overflow-hidden border-[1.5px] border-[#410407] shadow-inner bg-black">
+        <div className="my-3.5 rounded-xl overflow-hidden border-[1.5px] border-[#410407] shadow-inner bg-black">
           <iframe
             className="w-full h-[180px] sm:h-[220px]"
             src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&enablejsapi=1`}
@@ -239,9 +190,9 @@ function AudioVinylCard({
         </div>
       )}
 
-      {/* Original Poetic Text Interlude */}
+      {/* Interlude Monologue Text */}
       {interludeText && (
-        <p className="mt-4 m-0 text-[#2F1216] text-lg leading-relaxed italic text-justify pt-4 border-t border-[#410407]/15">
+        <p className="mt-3 m-0 text-[#2F1216] text-base sm:text-lg leading-relaxed italic text-justify pt-3 border-t border-[#410407]/15">
           «{interludeText}»
         </p>
       )}
@@ -381,12 +332,21 @@ export default function App() {
     return saved ? parseInt(saved, 10) : 21;
   });
 
-  // Accordion state management
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    'sec-inner-cover': true,
-    'sec-dedication': true,
-    'sec-introduction': true,
-  });
+  // Accordion state management (all collapsed by default)
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+
+  const handleReturnToGate = () => {
+    localStorage.removeItem('sanctuary_unlocked');
+    setUnlocked(false);
+    setShowGate(false);
+    setPassphrase('');
+    setExpandedSections({});
+    if (isAudioPlaying) {
+      soundscapeRef.current?.stop();
+      setIsAudioPlaying(false);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const toggleSection = (id: string) => {
     setExpandedSections((prev) => ({
@@ -601,7 +561,7 @@ export default function App() {
   // Chapter drawer items mapping
   const chaptersInDrawer = [
     {
-      title: 'الافتتاحية والميثاق الرصين',
+      title: 'إلى لَمَاتي',
       id: 'sec-inner-cover',
       doors: [
         { id: 'sec-inner-cover', title: 'الافتتاحية' },
@@ -614,7 +574,7 @@ export default function App() {
       doors: [{ id: 'sec-dedication', title: 'الإهداء' }],
     },
     {
-      title: 'المقدمة: ميلادٌ خارج التقويم',
+      title: 'المقدمة: في الرابع من نوفمبر',
       id: 'sec-introduction',
       doors: [
         { id: 'intro-door-1', title: MANUSCRIPT_DOORS['intro-door-1']?.title || 'الباب الأول' },
@@ -623,7 +583,7 @@ export default function App() {
       ],
     },
     {
-      title: 'الفصل الأول: ٩١١ يوماً.. جغرافيا الروح واليقين',
+      title: 'الفصل الأول: ٩١١ يوماً.. البدايات واليقين',
       id: 'chapter-1',
       doors: [1, 2, 3].map((i) => ({
         id: `ch1-door-${i}`,
@@ -631,7 +591,7 @@ export default function App() {
       })),
     },
     {
-      title: 'الفصل الثاني: مملكة الشيفرات واللغة السرية',
+      title: 'الفصل الثاني: لغتنا التي لا يفهمها أحد',
       id: 'chapter-2',
       doors: Array.from({ length: 12 }, (_, i) => ({
         id: `ch2-door-${i + 1}`,
@@ -639,7 +599,7 @@ export default function App() {
       })),
     },
     {
-      title: 'الفصل الثالث: مرآة الوجع وعواصف الخوف',
+      title: 'الفصل الثالث: الأيام الصعبة والخوف',
       id: 'chapter-3',
       doors: Array.from({ length: 12 }, (_, i) => ({
         id: `ch3-door-${i + 1}`,
@@ -647,7 +607,7 @@ export default function App() {
       })),
     },
     {
-      title: 'الفصل الرابع: ملاذ النور وضحكات العمر',
+      title: 'الفصل الرابع: الأيام الحلوة وضحكتك',
       id: 'chapter-4',
       doors: Array.from({ length: 12 }, (_, i) => ({
         id: `ch4-door-${i + 1}`,
@@ -655,7 +615,7 @@ export default function App() {
       })),
     },
     {
-      title: 'الفصل الخامس: دوامة الفراق ووهم الوداع',
+      title: 'الفصل الخامس: بعد التاسع من أكتوبر',
       id: 'chapter-5',
       doors: Array.from({ length: 6 }, (_, i) => ({
         id: `ch5-door-${i + 1}`,
@@ -663,7 +623,7 @@ export default function App() {
       })),
     },
     {
-      title: 'الفصل السادس: كينونة الأثر وسلطان الغياب',
+      title: 'الفصل السادس: ما يبقى بعد كل شيء',
       id: 'chapter-6',
       doors: Array.from({ length: 12 }, (_, i) => ({
         id: `ch6-door-${i + 1}`,
@@ -671,7 +631,7 @@ export default function App() {
       })),
     },
     {
-      title: 'الخاتمة والدعاء الصافي الأبدي',
+      title: 'الخاتمة: دعاءٌ في الغياب',
       id: 'sec-conclusion',
       doors: [{ id: 'sec-conclusion', title: 'خِتَامُ الكِتَابِ' }],
     },
@@ -700,36 +660,38 @@ export default function App() {
       {!unlocked && !showGate && (
         <aside
           id="gateway-threshold"
-          className="fixed inset-0 bg-[#FAF6F0] text-[#410407] z-[9999] flex flex-col justify-center items-center text-center p-6 relative overflow-hidden"
+          className="fixed inset-0 bg-[#FAF6F0] text-[#410407] z-[9999] flex flex-col justify-center items-center text-center p-3 sm:p-6 relative overflow-hidden"
           aria-label="العتبة الأولى"
         >
-          <div className="fixed inset-3 sm:inset-6 border-2 border-[#410407] rounded-[36px] pointer-events-none z-20 opacity-80" />
-          <div className="fixed inset-4 sm:inset-8 border border-[#AE9189] rounded-[32px] pointer-events-none z-20 opacity-60" />
+          <div className="fixed inset-2 sm:inset-5 border-2 border-[#410407] rounded-[32px] sm:rounded-[36px] pointer-events-none z-20 opacity-80" />
+          <div className="fixed inset-3.5 sm:inset-7 border border-[#AE9189] rounded-[28px] sm:rounded-[32px] pointer-events-none z-20 opacity-60" />
 
           {/* Majestic Arched Portal */}
-          <div className="arch-portal w-full max-w-[520px] px-8 py-10 sm:py-12 flex flex-col items-center text-center relative z-10 my-auto">
-            <div className="mb-3 transition-transform duration-500 hover:scale-105">
-              <WaxSeal className="w-24 h-24 sm:w-28 sm:h-28" />
+          <div className="arch-portal w-[325px] max-w-[92vw] min-h-[85vh] sm:min-h-[80vh] flex flex-col justify-between items-center text-center relative z-10 my-auto border-2 border-[#410407] bg-[#FFFDF9] shadow-[8px_8px_0px_#410407] rounded-[180px_180px_36px_36px] sm:rounded-[220px_220px_40px_40px] py-10 sm:py-14 px-6 sm:px-10 box-border">
+            <div className="flex flex-col items-center">
+              <div className="text-2xl sm:text-3xl text-[#851A26] tracking-widest font-serif opacity-90 mb-2 select-none">
+                ✦ · ❖ · ✦
+              </div>
+
+              <div className="px-4 py-1.5 rounded-full border border-[#410407]/30 bg-[#FAF6F0] text-[#851A26] text-xs font-bold tracking-widest uppercase mb-3">
+                طبعة خاصة — ٤ نوفمبر
+              </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F6ECE8] border border-[#AE9189] text-[#851A26] text-xs font-bold tracking-widest uppercase mb-2">
-              ✦ طبعة خاصة — 4 نوفمبر ✦
+            <div className="my-auto py-4 sm:py-6 flex flex-col items-center">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide leading-relaxed text-[#410407] font-['Scheherazade_New',serif]">
+                .. لَـمْ أَكُـــــنْ عَـابِراً<br />
+                ... وَلَــنْ تَـكُـونِـي
+              </h1>
             </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide leading-relaxed text-[#410407] font-['Scheherazade_New',serif]">
-              لَمْ أَكُنْ عَابِراً.. وَلَنْ تَكُونِي
-            </h1>
-            <p className="text-lg md:text-xl text-[#851A26] font-semibold tracking-wide mt-1">
-              (إصدار خاص — 4 نوفمبر)
-            </p>
 
             <button
               type="button"
               onClick={() => setShowGate(true)}
-              className="mt-6 bg-[#851A26] hover:bg-[#68141F] text-[#FAF6F0] border-1.5 border-[#410407] text-lg sm:text-xl cursor-pointer px-9 py-3.5 rounded-full transition-all duration-300 flex items-center gap-3 outline-none shadow-[4px_4px_0px_#410407] active:translate-x-1 active:translate-y-1 active:shadow-none font-bold"
+              className="bg-[#851A26] hover:bg-[#68141F] text-[#FAF6F0] border-[1.5px] border-[#410407] text-base sm:text-lg cursor-pointer px-9 py-3.5 rounded-full transition-all duration-300 flex items-center gap-2.5 outline-none shadow-[3px_3px_0px_#410407] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none font-bold"
             >
-              <span>اقرئي ما قبل هذا الصمت..</span>
-              <span className="text-base opacity-90">↓</span>
+              <span>افتحي الكتاب</span>
+              <span className="text-sm opacity-90">↓</span>
             </button>
           </div>
         </aside>
@@ -739,76 +701,79 @@ export default function App() {
       {!unlocked && showGate && (
         <aside
           id="intimate-gate"
-          className="fixed inset-0 bg-[#FAF6F0] text-[#2F1216] z-[9990] flex flex-col justify-center items-center p-6 relative overflow-hidden"
+          className="fixed inset-0 bg-[#FAF6F0] text-[#2F1216] z-[9990] flex flex-col justify-center items-center p-3 sm:p-6 relative overflow-hidden"
           aria-label="بوابة الدخول"
         >
           {isUnlockingAnimation && (
             <div className="absolute inset-0 bg-radial from-[#F6ECE8]/90 via-[#851A26]/30 to-transparent z-[10000] animate-[lightBloom_0.75s_ease-out_forwards] pointer-events-none" />
           )}
 
-          <div className="fixed inset-3 sm:inset-6 border-2 border-[#410407] rounded-[36px] pointer-events-none z-20 opacity-80" />
+          <div className="fixed inset-2 sm:inset-5 border-2 border-[#410407] rounded-[32px] sm:rounded-[36px] pointer-events-none z-20 opacity-80" />
+          <div className="fixed inset-3.5 sm:inset-7 border border-[#AE9189] rounded-[28px] sm:rounded-[32px] pointer-events-none z-20 opacity-60" />
 
           <form
             onSubmit={handleGateSubmit}
-            className="bg-[#FFFDF9] border-2 border-[#410407] rounded-[32px] p-8 sm:p-11 w-full max-w-[460px] flex flex-col items-center text-center shadow-[10px_10px_0px_#410407] relative z-10"
+            className="bg-[#FFFDF9] border-2 border-[#410407] rounded-[36px] p-8 sm:p-12 w-full max-w-[92vw] sm:max-w-[520px] min-h-[75vh] sm:min-h-[70vh] flex flex-col justify-center items-center text-center shadow-[8px_8px_0px_#410407] relative z-10 box-border"
           >
-            <div className="mb-4">
-              <WaxSeal className="w-16 h-16 sm:w-20 sm:h-20" glowing={false} />
-            </div>
+            <div className="w-full max-w-sm flex flex-col items-center">
+              <div className="text-xl sm:text-2xl text-[#851A26] tracking-widest font-serif opacity-90 mb-2 select-none">
+                ✦ · ❖ · ✦
+              </div>
 
-            <span className="text-xs uppercase tracking-widest text-[#AE9189] font-bold mb-1">
-              ✦ The Private Archive ✦
-            </span>
-            <h2 className="text-2xl font-bold text-[#410407] mb-1 font-['Scheherazade_New',serif]">
-              بوابة الملاذ الخاص
-            </h2>
-            <p className="text-sm text-[#851A26] mb-6 font-medium">
-              اكتبي العبارة للدخول إلى الكتاب
-            </p>
+              <span className="text-xs uppercase tracking-widest text-[#AE9189] font-bold mb-1">
+                ✦ The Private Archive ✦
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#410407] mb-1 font-['Scheherazade_New',serif]">
+                بوابة كتاب الميلاد
+              </h2>
+              <p className="text-sm sm:text-base text-[#851A26] mb-6 font-medium">
+                اكتبي العبارة للدخول إلى الكتاب
+              </p>
 
-            <div className="w-full flex flex-col items-center gap-3 mb-5">
-              <input
-                type="text"
-                value={passphrase}
-                onChange={(e) => setPassphrase(e.target.value)}
-                className={`w-full bg-[#FAF6F0] border-[1.8px] border-[#410407] rounded-full px-6 py-3.5 text-[#2F1216] text-center text-xl outline-none transition-all duration-300 focus:ring-2 focus:ring-[#851A26]/30 ${
-                  shake
-                    ? 'animate-[gentleShake_0.45s_ease-in-out] border-[#851A26] ring-2 ring-[#851A26]/40'
-                    : ''
-                }`}
-                placeholder="كلمة السر"
-                autoFocus
-                spellCheck={false}
-                aria-label="كلمة السر"
-              />
+              <div className="w-full flex flex-col items-center gap-3 mb-5">
+                <input
+                  type="text"
+                  value={passphrase}
+                  onChange={(e) => setPassphrase(e.target.value)}
+                  className={`w-full bg-[#FAF6F0] border-[1.8px] border-[#410407] rounded-full px-6 py-3.5 text-[#2F1216] text-center text-lg outline-none transition-all duration-300 focus:ring-2 focus:ring-[#851A26]/30 ${
+                    shake
+                      ? 'animate-[gentleShake_0.45s_ease-in-out] border-[#851A26] ring-2 ring-[#851A26]/40'
+                      : ''
+                  }`}
+                  placeholder="كلمة السر"
+                  autoFocus
+                  spellCheck={false}
+                  aria-label="كلمة السر"
+                />
 
-              {/* Interactive Hint Button & Sliding Card */}
+                {/* Interactive Hint Button & Sliding Card */}
+                <button
+                  type="button"
+                  onClick={() => setShowHint(!showHint)}
+                  className="mt-1 text-xs sm:text-sm font-bold text-[#851A26] hover:text-[#410407] transition-colors flex items-center gap-1.5 underline cursor-pointer outline-none"
+                >
+                  <HelpCircle className="w-4 h-4" />
+                  <span>تلميح</span>
+                </button>
+
+                {showHint && (
+                  <div className="px-5 py-2.5 rounded-full bg-[#F6ECE8] border border-[#AE9189] text-[#851A26] text-base font-bold italic animate-[fadeIn_0.3s_ease-out]">
+                    العبارة هي: «خذني بحضنك»
+                  </div>
+                )}
+              </div>
+
+              <div className={`min-h-[1.6rem] text-sm text-[#851A26] transition-opacity duration-300 mb-4 -mt-2 ${errorMsg ? 'opacity-100 font-bold' : 'opacity-0'}`}>
+                حاولي مرة أخرى..
+              </div>
+
               <button
-                type="button"
-                onClick={() => setShowHint(!showHint)}
-                className="mt-1 text-xs sm:text-sm font-bold text-[#851A26] hover:text-[#410407] transition-colors flex items-center gap-1.5 underline cursor-pointer outline-none"
+                type="submit"
+                className="w-full bg-[#851A26] hover:bg-[#68141F] text-[#FAF6F0] border-[1.5px] border-[#410407] font-bold px-8 py-3.5 text-base sm:text-lg rounded-full cursor-pointer transition-all duration-300 shadow-[3px_3px_0px_#410407] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none outline-none tracking-wide"
               >
-                <HelpCircle className="w-4 h-4" />
-                <span>تلميح</span>
+                ادخلي
               </button>
-
-              {showHint && (
-                <div className="px-5 py-2.5 rounded-full bg-[#F6ECE8] border border-[#AE9189] text-[#851A26] text-base font-bold italic animate-[fadeIn_0.3s_ease-out]">
-                  العبارة هي: «خذني بحضنك»
-                </div>
-              )}
             </div>
-
-            <div className={`min-h-[1.6rem] text-sm text-[#851A26] transition-opacity duration-300 mb-4 -mt-2 ${errorMsg ? 'opacity-100 font-bold' : 'opacity-0'}`}>
-              حاولي مرة أخرى..
-            </div>
-
-            <button
-              type="submit"
-              className="w-full sm:w-auto min-w-[200px] bg-[#851A26] hover:bg-[#68141F] text-[#FAF6F0] border-1.5 border-[#410407] font-bold px-10 py-3.5 text-lg rounded-full cursor-pointer transition-all duration-300 shadow-[4px_4px_0px_#410407] active:translate-x-1 active:translate-y-1 active:shadow-none outline-none tracking-wide"
-            >
-              ادخلي
-            </button>
           </form>
         </aside>
       )}
@@ -844,12 +809,11 @@ export default function App() {
           </div>
         </div>
 
-        {/* 1. الافتتاحية والميثاق الرصين */}
+        {/* 1. إلى لَمَاتي */}
         <AccordionCard
           id="sec-inner-cover"
           badge="الافتتاحية"
-          title="الافتتاحية والميثاق الرصين"
-          subtitle="إلى لَمَى.. المعنى الكامل للصورة"
+          title="إلى لَمَاتي"
           isOpen={!!expandedSections['sec-inner-cover']}
           onToggle={() => toggleSection('sec-inner-cover')}
         >
@@ -869,9 +833,6 @@ export default function App() {
           </div>
 
           <div id="sec-covenant" className="my-8 pt-6 border-t border-[#410407]/20 scroll-mt-24">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-[#851A26] text-[#FAF6F0] text-sm font-bold mb-4 shadow-sm">
-              الميثاق الرصين
-            </span>
             <div className="space-y-4 text-justify">
               {SPECIAL_SECTIONS.covenant?.paragraphs.map((p, idx) => (
                 <p key={idx} className="leading-[2.2] text-[#2F1216]">
@@ -900,11 +861,11 @@ export default function App() {
           </div>
         </AccordionCard>
 
-        {/* 3. المقدمة: ميلادٌ خارج التقويم */}
+        {/* 3. المقدمة: في الرابع من نوفمبر */}
         <AccordionCard
           id="sec-introduction"
           badge="المقدمة"
-          title="المقدمة: ميلادٌ خارج التقويم"
+          title="المقدمة: في الرابع من نوفمبر"
           subtitle="٣ أبواب في إعادة حساب العمر"
           isOpen={!!expandedSections['sec-introduction']}
           onToggle={() => toggleSection('sec-introduction')}
@@ -926,7 +887,7 @@ export default function App() {
         <AccordionCard
           id="chapter-1"
           badge="الفصل الأول"
-          title="الفصل الأول: ٩١١ يوماً.. جغرافيا الروح واليقين"
+          title="الفصل الأول: ٩١١ يوماً.. البدايات واليقين"
           subtitle="٣ أبواب في الجذور والذاكرة"
           isOpen={!!expandedSections['chapter-1']}
           onToggle={() => toggleSection('chapter-1')}
@@ -936,21 +897,21 @@ export default function App() {
           <DoorContent id="ch1-door-3" />
         </AccordionCard>
 
-        {/* المرفأ الوجداني الأول - فاصل غنائي معتمد */}
+        {/* فاصل غنائي (١) */}
         <AudioVinylCard
-          interludeNumberText="المرفأ الوجداني الأول"
-          trackTitle="أحبك ليه"
           artist="عبد المجيد عبد الله"
-          songQuote="أحبك ليه أنا مدري.. لقيتك ساكنٍ فيني"
-          youtubeId="2HOc--v3YD0"
+          interludeBadge="فاصل غنائي (١)"
           interludeText="بطلنا نعرف أخبار بعض، بس لليوم كل ما أطلع على الساعة بتذكر بالضبط شو كنتِ تعملي بهالوقت. بعرف متى كنتِ تصحي ومتى تنامي ومتى تكوني مشغولة ومتى كنتِ تفضي عشان نحكي.. غريب كيف ممكن نطلع من روتين بعض بس تضل تفاصيلنا عايشة بذاكرة بعض، والأغرب إني بطلت أعرف كيف بيمر يومك بس لسه بتذكر كل تفاصيله كأنك إمبارح حكيتيه لي."
+          songQuote="أحبك ليه أنا مدري.. لقيتك ساكنٍ فيني"
+          trackTitle="أحبك ليه"
+          youtubeId="2HOc--v3YD0"
         />
 
         {/* 5. الفصل الثاني */}
         <AccordionCard
           id="chapter-2"
           badge="الفصل الثاني"
-          title="الفصل الثاني: مملكة الشيفرات واللغة السرية"
+          title="الفصل الثاني: لغتنا التي لا يفهمها أحد"
           subtitle="١٢ باباً في الشفرات والخصوصية"
           isOpen={!!expandedSections['chapter-2']}
           onToggle={() => toggleSection('chapter-2')}
@@ -960,21 +921,21 @@ export default function App() {
           ))}
         </AccordionCard>
 
-        {/* المرفأ الوجداني الثاني - فاصل غنائي معتمد */}
+        {/* فاصل غنائي (٢) */}
         <AudioVinylCard
-          interludeNumberText="المرفأ الوجداني الثاني"
-          trackTitle="مهما يقولون"
           artist="محمد عبده (جلسة عود)"
-          songQuote="أنتِ البدايات.. وآخر ساحل ومينا"
-          youtubeId="nViPujMLNPM"
+          interludeBadge="فاصل غنائي (٢)"
           interludeText="مشيتي قبل ما أشبع منك، قبل ما أشبع من صوتك، من ضحكتك، ومن وجودك بحياتي.. كان لسه عندي حكي كثير أحكيلك إياه، ولحظات كثير نفسي نعيشها، بس انتِ مشيتي قبل ما تكملي حكايتنا، وتركتيني أعيش على شوق ما أخذ كفايته منك."
+          songQuote="أنتِ البدايات.. وآخر ساحل ومينا"
+          trackTitle="مهما يقولون"
+          youtubeId="nViPujMLNPM"
         />
 
         {/* 6. الفصل الثالث */}
         <AccordionCard
           id="chapter-3"
           badge="الفصل الثالث"
-          title="الفصل الثالث: مرآة الوجع وعواصف الخوف"
+          title="الفصل الثالث: الأيام الصعبة والخوف"
           subtitle="١٢ باباً في المراجعات والنضج"
           isOpen={!!expandedSections['chapter-3']}
           onToggle={() => toggleSection('chapter-3')}
@@ -984,21 +945,21 @@ export default function App() {
           ))}
         </AccordionCard>
 
-        {/* المرفأ الوجداني الثالث - فاصل غنائي معتمد */}
+        {/* فاصل غنائي (٣) */}
         <AudioVinylCard
-          interludeNumberText="المرفأ الوجداني الثالث"
-          trackTitle="ليه دايم أحتاج أسألك"
           artist="عبد المجيد عبد الله (جلسة عود)"
-          songQuote="ليه دايم أحتاج أسألك.. وش فيك شاللي زعّلك؟"
-          youtubeId="vSh-8dF_Afw"
+          interludeBadge="فاصل غنائي (٣)"
           interludeText="أنا ما كتبت هذا عشان أرجّع اللوم ولا أعدّ الغلطات، كتبته لأني زعلان ومتألم لكني بعد متمسك فينا ومؤمن إن اللي بينا يتصلّح بالهدوء وبالكلام الصادق، مو بالصراخ ولا بالإرجاع ولا بالانسحاب.. وفي النهاية ما أبي من كل هالكلام شي غير إنك تحسي إنك مسموعة ومفهومة، وإن اللي صار مو نهاية ولا كسر، كان لحظة تعب نقدر نعديها إذا مسكنا يد بعض بهدوء. خذي وقتك وراحتك، وأنا موجود بنفس المكان اللي كنت فيه دايماً إنسانة تهمني ومشاعرها تفرق معي، واللي بينا يستاهل نهدى عشانه مو نوجع بعض بسببه.. ومتى ما حسيتي إنك جاهزة نحكي ونصلح بدون ما نخسر شي حلو جمعنا، لأن وجودك بحياتي مو لحظة ولا ظرف، هو شي ثابت وأتمنى يبقى بهالشكل."
+          songQuote="ليه دايم أحتاج أسألك.. وش فيك شاللي زعّلك؟"
+          trackTitle="ليه دايم أحتاج أسألك"
+          youtubeId="vSh-8dF_Afw"
         />
 
         {/* 7. الفصل الرابع */}
         <AccordionCard
           id="chapter-4"
           badge="الفصل الرابع"
-          title="الفصل الرابع: ملاذ النور وضحكات العمر"
+          title="الفصل الرابع: الأيام الحلوة وضحكتك"
           subtitle="١٢ باباً في البهاء والفرح"
           isOpen={!!expandedSections['chapter-4']}
           onToggle={() => toggleSection('chapter-4')}
@@ -1008,21 +969,21 @@ export default function App() {
           ))}
         </AccordionCard>
 
-        {/* المرفأ الوجداني الرابع - فاصل غنائي معتمد */}
+        {/* فاصل غنائي (٤) */}
         <AudioVinylCard
-          interludeNumberText="المرفأ الوجداني الرابع"
-          trackTitle="من يقول الزين"
           artist="محمد عبده (جلسة عود)"
-          songQuote="من يقول الزين ما يكمل حلاه؟.. كل ما فيكِ اكتمل!"
-          youtubeId="iukkrKjI_yE"
+          interludeBadge="فاصل غنائي (٤)"
           interludeText="بتذكري كيف كنا نضحك من قلبنا؟ بتذكر كيف كانت الأيام خفيفة والوقت يمر بدون ما نحس فيه؟.. اشتقت لهداك الهدوء، اشتقت للأمان اللي كان يملأ صدري بس لمجرد إني أسمع نبرة صوتك مبسوطة.. غريب كيف كنا نقدر نخلّي الدنيا كلها تسكت عشان نحكي، وكيف صارت كل ضحكة عشناها زمان توجع اليوم لأنها باقية لحالها بالذاكرة."
+          songQuote="من يقول الزين ما يكمل حلاه؟.. كل ما فيكِ اكتمل!"
+          trackTitle="من يقول الزين"
+          youtubeId="iukkrKjI_yE"
         />
 
         {/* 8. الفصل الخامس */}
         <AccordionCard
           id="chapter-5"
           badge="الفصل الخامس"
-          title="الفصل الخامس: دوامة الفراق ووهم الوداع"
+          title="الفصل الخامس: بعد التاسع من أكتوبر"
           subtitle="٦ أبواب في الثبات والصمت الوقور"
           isOpen={!!expandedSections['chapter-5']}
           onToggle={() => toggleSection('chapter-5')}
@@ -1032,21 +993,21 @@ export default function App() {
           ))}
         </AccordionCard>
 
-        {/* المرفأ الوجداني الخامس - فاصل غنائي معتمد */}
+        {/* فاصل غنائي (٥) */}
         <AudioVinylCard
-          interludeNumberText="المرفأ الوجداني الخامس"
-          trackTitle="ما عاد بدري"
           artist="محمد عبده (جلسة عود)"
-          songQuote="ما عاد بدري.. قلت لي راح الحنين؟"
-          youtubeId="gqoJ_1Loz1w"
+          interludeBadge="فاصل غنائي (٥)"
           interludeText="صار لي وقت طويل ساكت.. مو لأني نسيت، ولا لأني ما عاد عندي حكي أحكيه، بس لأني حسيت إن الصمت أحياناً بكون أصدق وأرقى من ألف كلمة بنحكي فيها وما بتتفهم.. بعد تسعة أكتوبر، تعلّمت كيف أوقف مكاني بدون ما أمد إيدي وبدون ما أدير ظهري، تعلّمت كيف أحترم غيابك وأصون هيبتك بقلبي بدون ما أزعج هدوءك.. غريب كيف الإنسان ممكن يكون بعيد كل هالبعد، وبنفس الوقت حاضر بكل تفصيلة.. أنا ما طرقت بابك لأني بعرف قيمة نفسي وبطمن على راحتك، بس بنفس الوقت ما هان عليّ يوم عشناه سوا.. تارك هالصمت يحكي، وتارك الأيام تثبت إن اللي كان صادق، بضل وفي حتى وهو غايب."
+          songQuote="ما عاد بدري.. قلت لي راح الحنين؟"
+          trackTitle="ما عاد بدري"
+          youtubeId="gqoJ_1Loz1w"
         />
 
         {/* 9. الفصل السادس */}
         <AccordionCard
           id="chapter-6"
           badge="الفصل السادس"
-          title="الفصل السادس: كينونة الأثر وسلطان الغياب"
+          title="الفصل السادس: ما يبقى بعد كل شيء"
           subtitle="١٢ باباً في الخلود والأثر الأبدي"
           isOpen={!!expandedSections['chapter-6']}
           onToggle={() => toggleSection('chapter-6')}
@@ -1056,21 +1017,21 @@ export default function App() {
           ))}
         </AccordionCard>
 
-        {/* المرفأ الوجداني السادس - فاصل غنائي معتمد */}
+        {/* فاصل غنائي (٦) */}
         <AudioVinylCard
-          interludeNumberText="المرفأ الوجداني السادس"
-          trackTitle="يا بعدهم كلهم"
           artist="عبد المجيد عبد الله"
-          songQuote="يا بعدهم كلهم.. يا سراجي بينهم"
-          youtubeId="gUXpRiMW1Lk"
+          interludeBadge="فاصل غنائي (٦)"
           interludeText="تعرفي شو اللي يخليني مطمئن وأنا ساكت؟ إني بعرف إن الصدق ما بيموت، وإن الأثر الحقيقي ما بتمحيه قسوة ولا بتبدله مسافات.. أنا ما تركتك عشان أنساكِ، ولا وقفت مكاني عشان أبيكِ؛ بس وقفت لأني بعرف إن اللي بينا أكبر من لعبة شد حبال.. كنت، ولساتني، بشوفك أطهر مرحلة بحياتي.. غبتِ أو بقيتِ، مكانك هون بالعمق، بالقرارات، وبالطريقة اللي صرت أشوف فيها الدنيا.. واللي بكون هيك، مستحيل يكون عابر، ومستحيل بيوم يقدر يحكي إنه نسي."
+          songQuote="يا بعدهم كلهم.. يا سراجي بينهم"
+          trackTitle="يا بعدهم كلهم"
+          youtubeId="gUXpRiMW1Lk"
         />
 
-        {/* 10. الخاتمة والدعاء الصافي والكلمة الدائمة */}
+        {/* 10. الخاتمة: دعاءٌ في الغياب */}
         <AccordionCard
           id="sec-conclusion"
           badge="الخاتمة"
-          title="الخَاتِمَةُ وَالدُّعَاءُ الصَّافِي الأَبَدِيُّ"
+          title="الخاتمة: دعاءٌ في الغياب"
           subtitle="خِتَامُ الكِتَابِ.. وَاسْتِمْرَارُ الحِكَايَةِ"
           isOpen={!!expandedSections['sec-conclusion']}
           onToggle={() => toggleSection('sec-conclusion')}
@@ -1094,11 +1055,6 @@ export default function App() {
               );
             })}
           </div>
-
-          <div className="mt-12 text-left font-bold text-xl md:text-2xl text-[#851A26]">
-            <p className="m-0 text-[#410407]">علاء</p>
-            <p className="m-0 text-base font-normal mt-1">الرابع من نوفمبر</p>
-          </div>
         </AccordionCard>
       </main>
 
@@ -1115,33 +1071,33 @@ export default function App() {
         </div>
       )}
 
-      {/* Floating Bottom Navigation & Controls Dock */}
+      {/* Floating Bottom Navigation & Controls Dock (Responsive Mobile-First) */}
       {unlocked && (
         <aside
           id="floating-sanctuary-controls"
           aria-label="أدوات القراءة والملاذ"
-          className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[5000] flex items-center gap-2 sm:gap-3 px-4 py-2.5 rounded-full backdrop-blur-md shadow-[4px_4px_0px_#410407] border-1.5 border-[#410407] bg-[#FAF6F0]/95 text-[#2F1216]"
+          className="fixed bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 z-[5000] flex items-center justify-between gap-1 sm:gap-2.5 px-2 sm:px-3.5 py-1.5 sm:py-2 rounded-full backdrop-blur-md shadow-[4px_4px_0px_#410407] border-[1.5px] border-[#410407] bg-[#FAF6F0]/95 text-[#2F1216] max-w-[95vw] w-auto box-border"
         >
           {/* Chapter Index Button */}
           <button
             type="button"
             id="nav-drawer-toggle"
             onClick={() => setDrawerOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 bg-[#851A26] text-[#FAF6F0] border border-[#410407] shadow-[2px_2px_0px_#410407] hover:bg-[#68141F] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none outline-none cursor-pointer shrink-0"
+            className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-200 bg-[#851A26] text-[#FAF6F0] border border-[#410407] shadow-[2px_2px_0px_#410407] hover:bg-[#68141F] active:translate-x-0.5 active:translate-y-0.5 outline-none cursor-pointer shrink-0"
             aria-label="فتح فهرس الكتاب"
             title="فهرس الكتاب"
           >
-            <BookOpen className="w-4 h-4" />
-            <span>فهرس الكتاب</span>
+            <BookOpen className="w-3.5 h-3.5"/>
+            <span className="whitespace-nowrap">فهرس الكتاب</span>
           </button>
 
-          <span className="w-[1px] h-4 bg-[#410407]/30" />
+          <span className="w-[1px] h-3.5 sm:h-4 bg-[#410407]/30 shrink-0" />
 
           {/* Ambient Music Toggle */}
           <button
             type="button"
             onClick={toggleAudio}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all outline-none cursor-pointer shrink-0 border border-[#410407] ${
+            className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all outline-none cursor-pointer shrink-0 border border-[#410407] ${
               isAudioPlaying
                 ? 'bg-[#851A26] text-[#FAF6F0] shadow-[2px_2px_0px_#410407]'
                 : 'bg-[#FAF6F0] text-[#851A26] hover:bg-[#E6D6C5]/50'
@@ -1149,44 +1105,58 @@ export default function App() {
             aria-label={isAudioPlaying ? 'إيقاف المعزوفة' : 'تشغيل المعزوفة'}
             title="المعزوفة الموسيقية"
           >
-            <Music className="w-4 h-4" />
-            <span>{isAudioPlaying ? 'المعزوفة' : 'المعزوفة'}</span>
+            <Music className="w-3.5 h-3.5"/>
+            <span className="whitespace-nowrap">المعزوفة</span>
           </button>
 
-          <span className="w-[1px] h-4 bg-[#410407]/30" />
+          <span className="w-[1px] h-3.5 sm:h-4 bg-[#410407]/30 shrink-0" />
 
           {/* Font Resizing Pill Group */}
-          <div className="flex items-center gap-1 bg-[#FFFDF9] border border-[#410407] rounded-full px-2 py-1 shadow-[2px_2px_0px_#410407]">
+          <div className="flex items-center gap-0.5 sm:gap-1 bg-[#FFFDF9] border border-[#410407] rounded-full px-1.5 py-0.5 shadow-[2px_2px_0px_#410407] shrink-0">
             <button
               type="button"
               onClick={handleDecreaseFont}
               disabled={fontSize <= 18}
-              className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-[#410407] hover:bg-[#851A26] hover:text-[#FAF6F0] transition-colors disabled:opacity-30 cursor-pointer outline-none select-none"
+              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold text-[#410407] hover:bg-[#851A26] hover:text-[#FAF6F0] transition-colors disabled:opacity-30 cursor-pointer outline-none select-none"
               title="تصغير الخط"
             >
               أ-
             </button>
-            <span className="text-xs font-bold text-[#851A26] px-1 tabular-nums select-none">
+            <span className="text-[10px] sm:text-xs font-bold text-[#851A26] px-0.5 tabular-nums select-none">
               {fontSize}
             </span>
             <button
               type="button"
               onClick={handleIncreaseFont}
               disabled={fontSize >= 26}
-              className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-[#410407] hover:bg-[#851A26] hover:text-[#FAF6F0] transition-colors disabled:opacity-30 cursor-pointer outline-none select-none"
+              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold text-[#410407] hover:bg-[#851A26] hover:text-[#FAF6F0] transition-colors disabled:opacity-30 cursor-pointer outline-none select-none"
               title="تكبير الخط"
             >
               أ+
             </button>
           </div>
 
-          <span className="w-[1px] h-4 bg-[#410407]/30" />
+          <span className="w-[1px] h-3.5 sm:h-4 bg-[#410407]/30 shrink-0" />
 
-          {/* Reading Distillation Progress Counter */}
+          {/* Return to Gate / Lock Button */}
+          <button
+            type="button"
+            onClick={handleReturnToGate}
+            className="flex items-center gap-1 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-200 bg-[#FAF6F0] text-[#851A26] border border-[#410407] hover:bg-[#851A26] hover:text-[#FAF6F0] outline-none cursor-pointer shrink-0"
+            aria-label="العودة إلى بوابة الدخول"
+            title="إغلاق والعودة للبوابة"
+          >
+            <Lock className="w-3 h-3"/>
+            <span className="whitespace-nowrap hidden xs:inline sm:inline">البوابة</span>
+          </button>
+
+          <span className="w-[1px] h-3.5 sm:h-4 bg-[#410407]/30 shrink-0" />
+
+          {/* Reading Progress Counter */}
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="bg-[#410407] text-[#FAF6F0] border border-[#410407] px-3 py-1.5 rounded-full text-xs font-bold tabular-nums hover:bg-[#2F1216] transition-colors cursor-pointer shrink-0 shadow-[2px_2px_0px_#AE9189]"
+            className="bg-[#410407] text-[#FAF6F0] border border-[#410407] px-1.5 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold tabular-nums hover:bg-[#2F1216] transition-colors cursor-pointer shrink-0 shadow-[2px_2px_0px_#AE9189]"
             title="نسبة القراءة — انقري للعودة للأعلى"
           >
             {Math.round(scrollProgress)}%
