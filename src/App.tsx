@@ -8,6 +8,7 @@ import {
   Pause,
   X,
   Lock,
+  Stamp,
 } from 'lucide-react';
 import { MANUSCRIPT_DOORS, SPECIAL_SECTIONS } from './manuscriptData';
 
@@ -107,18 +108,15 @@ interface AudioVinylCardProps {
   interludeBadge: string;
   trackTitle: string;
   artist: string;
-  songQuote: string;
+  songQuote?: string;
   youtubeId: string;
-  interludeText?: string;
 }
 
 function AudioVinylCard({
   interludeBadge,
   trackTitle,
   artist,
-  songQuote,
   youtubeId,
-  interludeText,
 }: AudioVinylCardProps) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
@@ -170,13 +168,6 @@ function AudioVinylCard({
         </button>
       </div>
 
-      {/* Quote Banner */}
-      <div className="my-3.5 p-3 sm:p-4 rounded-xl bg-[#FFFDF9] border border-[#410407]/30 text-center shadow-sm">
-        <p className="m-0 text-[#851A26] text-base sm:text-xl font-bold italic font-['Scheherazade_New',serif]">
-          «{songQuote}»
-        </p>
-      </div>
-
       {/* Embedded YouTube Audio Player */}
       {isPlaying && (
         <div className="my-3.5 rounded-xl overflow-hidden border-[1.5px] border-[#410407] shadow-inner bg-black">
@@ -189,14 +180,87 @@ function AudioVinylCard({
           />
         </div>
       )}
-
-      {/* Interlude Monologue Text */}
-      {interludeText && (
-        <p className="mt-3 m-0 text-[#2F1216] text-base sm:text-lg leading-relaxed italic text-justify pt-3 border-t border-[#410407]/15">
-          «{interludeText}»
-        </p>
-      )}
     </aside>
+  );
+}
+
+interface EnvelopeCardProps {
+  letterTitle: string;
+  letterContent: string;
+}
+
+function EnvelopeCard({ letterTitle, letterContent }: EnvelopeCardProps) {
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const cardRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          if (cardRef.current) observer.unobserve(cardRef.current);
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <article
+      ref={cardRef}
+      className={`envelope-card bg-[#FFFDF9] border-[1.5px] border-dashed border-[#851A26]/50 rounded-[24px] p-6 sm:p-8 my-6 relative shadow-[4px_4px_0px_#410407] overflow-hidden transition-all duration-700 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      }`}
+    >
+      {/* Top Envelope Flap Accent & Heritage Postage Stamp Header */}
+      <div className="flex items-start justify-between pb-3 mb-4 border-b border-[#410407]/15 gap-2">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#F6ECE8] text-[#851A26] border border-[#AE9189]/40 flex items-center gap-1.5 shadow-xs">
+            <span>✉</span>
+            <span>رسالة خاصة</span>
+          </span>
+          <h4 className="text-lg sm:text-xl font-bold text-[#410407] font-['Scheherazade_New',serif] m-0">
+            {letterTitle}
+          </h4>
+        </div>
+
+        {/* Vintage Heritage Postage Stamp & Wavy Cancellation Postmark (ختم وطابع بريدي تراثي مميز) */}
+        <div className="flex items-center gap-2.5 shrink-0 select-none">
+          {/* Vintage Circular Postmark Stamp (ختم بريدي دائري مزخرف) */}
+          <div className="relative w-12 h-12 rounded-full border-2 border-dashed border-[#851A26] bg-[#F6ECE8] flex flex-col items-center justify-center rotate-[-12deg] shadow-xs shrink-0">
+            <div className="w-10 h-10 rounded-full border border-dotted border-[#851A26]/60 flex flex-col items-center justify-center leading-none">
+              <span className="text-[7px] font-bold text-[#851A26] uppercase tracking-tighter">POSTAL</span>
+              <span className="text-[10px] font-bold text-[#410407] font-serif my-0.5">04.11</span>
+              <span className="text-[7px] text-[#851A26] opacity-80">✦ · ✦</span>
+            </div>
+            {/* Wavy Postmark Cancellation Lines */}
+            <div className="absolute -left-3 top-1/2 -translate-y-1/2 text-[#851A26]/40 font-mono text-[9px] tracking-tighter pointer-events-none">
+              ≈≈≈
+            </div>
+          </div>
+
+          {/* Postage Stamp Badge (طابع بريد رسمي مع أيقونة الختم) */}
+          <div className="rotate-[3deg] border-2 border-dashed border-[#851A26] bg-[#FAF6F0] px-3 py-1.5 rounded-lg shadow-xs flex flex-col items-center justify-center">
+            <span className="text-[10px] font-bold text-[#851A26] tracking-wider flex items-center gap-1">
+              <Stamp className="w-3.5 h-3.5 text-[#851A26]" />
+              <span>طابع بريد</span>
+            </span>
+            <span className="text-xs font-bold text-[#410407] font-serif">✦ ٤ نوفمبر ✦</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Letter Body */}
+      <p className="m-0 text-[#2F1216] text-base sm:text-lg leading-[2.3] italic text-justify font-['Scheherazade_New',serif]">
+        «{letterContent}»
+      </p>
+    </article>
   );
 }
 
@@ -399,7 +463,7 @@ export default function App() {
   };
 
   // Ambient soundscape audio state
-  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(true);
   const soundscapeRef = useRef<AmbientSoundscape | null>(null);
 
   useEffect(() => {
@@ -460,6 +524,10 @@ export default function App() {
       setIsUnlockingAnimation(true);
       setErrorMsg(false);
       setShake(false);
+      if (!isAudioPlaying) {
+        setIsAudioPlaying(true);
+        soundscapeRef.current?.start();
+      }
       setTimeout(() => {
         localStorage.setItem('sanctuary_unlocked', 'true');
         setUnlocked(true);
@@ -667,7 +735,7 @@ export default function App() {
           <div className="fixed inset-3.5 sm:inset-7 border border-[#AE9189] rounded-[28px] sm:rounded-[32px] pointer-events-none z-20 opacity-60" />
 
           {/* Majestic Arched Portal */}
-          <div className="arch-portal w-[325px] max-w-[92vw] min-h-[85vh] sm:min-h-[80vh] flex flex-col justify-between items-center text-center relative z-10 my-auto border-2 border-[#410407] bg-[#FFFDF9] shadow-[8px_8px_0px_#410407] rounded-[180px_180px_36px_36px] sm:rounded-[220px_220px_40px_40px] py-10 sm:py-14 px-6 sm:px-10 box-border">
+          <div style={{ marginTop: '20px' }} className="arch-portal w-[325px] max-w-[92vw] min-h-[85vh] sm:min-h-[80vh] flex flex-col justify-between items-center text-center relative z-10 my-auto border-2 border-[#410407] bg-[#FFFDF9] shadow-[8px_8px_0px_#410407] rounded-[180px_180px_36px_36px] sm:rounded-[220px_220px_40px_40px] py-10 sm:py-14 px-6 sm:px-10 box-border">
             <div className="flex flex-col items-center">
               <div className="text-2xl sm:text-3xl text-[#851A26] tracking-widest font-serif opacity-90 mb-2 select-none">
                 ✦ · ❖ · ✦
@@ -687,13 +755,31 @@ export default function App() {
 
             <button
               type="button"
-              onClick={() => setShowGate(true)}
+              onClick={() => {
+                setShowGate(true);
+                if (!isAudioPlaying) {
+                  setIsAudioPlaying(true);
+                  soundscapeRef.current?.start();
+                }
+              }}
               className="bg-[#851A26] hover:bg-[#68141F] text-[#FAF6F0] border-[1.5px] border-[#410407] text-base sm:text-lg cursor-pointer px-9 py-3.5 rounded-full transition-all duration-300 flex items-center gap-2.5 outline-none shadow-[3px_3px_0px_#410407] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none font-bold"
             >
               <span>افتحي الكتاب</span>
               <span className="text-sm opacity-90">↓</span>
             </button>
           </div>
+
+          {/* Background Ambient Soundtrack (زحمة حكي) */}
+          {isAudioPlaying && (
+            <iframe
+              width="1"
+              height="1"
+              src="https://www.youtube.com/embed/5g-s5WvLLek?autoplay=1&loop=1&playlist=5g-s5WvLLek&enablejsapi=1"
+              title="Background Ambient Music - زحمة حكي"
+              allow="autoplay; encrypted-media"
+              className="hidden pointer-events-none opacity-0 fixed bottom-0 left-0"
+            />
+          )}
         </aside>
       )}
 
@@ -713,7 +799,8 @@ export default function App() {
 
           <form
             onSubmit={handleGateSubmit}
-            className="bg-[#FFFDF9] border-2 border-[#410407] rounded-[36px] p-8 sm:p-12 w-full max-w-[92vw] sm:max-w-[520px] min-h-[75vh] sm:min-h-[70vh] flex flex-col justify-center items-center text-center shadow-[8px_8px_0px_#410407] relative z-10 box-border"
+            style={{ width: '330px', marginTop: '20px' }}
+            className="bg-[#FFFDF9] border-2 border-[#410407] rounded-[36px] p-8 sm:p-12 min-h-[75vh] sm:min-h-[70vh] flex flex-col justify-center items-center text-center shadow-[8px_8px_0px_#410407] relative z-10 box-border"
           >
             <div className="w-full max-w-sm flex flex-col items-center">
               <div className="text-xl sm:text-2xl text-[#851A26] tracking-widest font-serif opacity-90 mb-2 select-none">
@@ -897,14 +984,16 @@ export default function App() {
           <DoorContent id="ch1-door-3" />
         </AccordionCard>
 
-        {/* فاصل غنائي (١) */}
+        {/* فاصل غنائي (١) ورسالة خاصة */}
         <AudioVinylCard
           artist="عبد المجيد عبد الله"
           interludeBadge="فاصل غنائي (١)"
-          interludeText="بطلنا نعرف أخبار بعض، بس لليوم كل ما أطلع على الساعة بتذكر بالضبط شو كنتِ تعملي بهالوقت. بعرف متى كنتِ تصحي ومتى تنامي ومتى تكوني مشغولة ومتى كنتِ تفضي عشان نحكي.. غريب كيف ممكن نطلع من روتين بعض بس تضل تفاصيلنا عايشة بذاكرة بعض، والأغرب إني بطلت أعرف كيف بيمر يومك بس لسه بتذكر كل تفاصيله كأنك إمبارح حكيتيه لي."
-          songQuote="أحبك ليه أنا مدري.. لقيتك ساكنٍ فيني"
           trackTitle="أحبك ليه"
           youtubeId="2HOc--v3YD0"
+        />
+        <EnvelopeCard
+          letterTitle="ذاكرة الساعة"
+          letterContent="بطلنا نعرف أخبار بعض، بس لليوم كل ما أطلع على الساعة بتذكر بالضبط شو كنتِ تعملي بهالوقت. بعرف متى كنتِ تصحي ومتى تنامي ومتى تكوني مشغولة ومتى كنتِ تفضي عشان نحكي.. غريب كيف ممكن نطلع من روتين بعض بس تضل تفاصيلنا عايشة بذاكرة بعض، والأغرب إني بطلت أعرف كيف بيمر يومك بس لسه بتذكر كل تفاصيله كأنك إمبارح حكيتيه لي."
         />
 
         {/* 5. الفصل الثاني */}
@@ -921,14 +1010,16 @@ export default function App() {
           ))}
         </AccordionCard>
 
-        {/* فاصل غنائي (٢) */}
+        {/* فاصل غنائي (٢) ورسالة خاصة */}
         <AudioVinylCard
           artist="محمد عبده (جلسة عود)"
           interludeBadge="فاصل غنائي (٢)"
-          interludeText="مشيتي قبل ما أشبع منك، قبل ما أشبع من صوتك، من ضحكتك، ومن وجودك بحياتي.. كان لسه عندي حكي كثير أحكيلك إياه، ولحظات كثير نفسي نعيشها، بس انتِ مشيتي قبل ما تكملي حكايتنا، وتركتيني أعيش على شوق ما أخذ كفايته منك."
-          songQuote="أنتِ البدايات.. وآخر ساحل ومينا"
           trackTitle="مهما يقولون"
           youtubeId="nViPujMLNPM"
+        />
+        <EnvelopeCard
+          letterTitle="قبل أن أشبع منكِ"
+          letterContent="مشيتي قبل ما أشبع منك، قبل ما أشبع من صوتك، من ضحكتك، ومن وجودك بحياتي.. كان لسه عندي حكي كثير أحكيلك إياه، ولحظات كثير نفسي نعيشها، بس انتِ مشيتي قبل ما تكملي حكايتنا، وتركتيني أعيش على شوق ما أخذ كفايته منك."
         />
 
         {/* 6. الفصل الثالث */}
@@ -945,14 +1036,16 @@ export default function App() {
           ))}
         </AccordionCard>
 
-        {/* فاصل غنائي (٣) */}
+        {/* فاصل غنائي (٣) ورسالة خاصة */}
         <AudioVinylCard
           artist="عبد المجيد عبد الله (جلسة عود)"
           interludeBadge="فاصل غنائي (٣)"
-          interludeText="أنا ما كتبت هذا عشان أرجّع اللوم ولا أعدّ الغلطات، كتبته لأني زعلان ومتألم لكني بعد متمسك فينا ومؤمن إن اللي بينا يتصلّح بالهدوء وبالكلام الصادق، مو بالصراخ ولا بالإرجاع ولا بالانسحاب.. وفي النهاية ما أبي من كل هالكلام شي غير إنك تحسي إنك مسموعة ومفهومة، وإن اللي صار مو نهاية ولا كسر، كان لحظة تعب نقدر نعديها إذا مسكنا يد بعض بهدوء. خذي وقتك وراحتك، وأنا موجود بنفس المكان اللي كنت فيه دايماً إنسانة تهمني ومشاعرها تفرق معي، واللي بينا يستاهل نهدى عشانه مو نوجع بعض بسببه.. ومتى ما حسيتي إنك جاهزة نحكي ونصلح بدون ما نخسر شي حلو جمعنا، لأن وجودك بحياتي مو لحظة ولا ظرف، هو شي ثابت وأتمنى يبقى بهالشكل."
-          songQuote="ليه دايم أحتاج أسألك.. وش فيك شاللي زعّلك؟"
           trackTitle="ليه دايم أحتاج أسألك"
           youtubeId="vSh-8dF_Afw"
+        />
+        <EnvelopeCard
+          letterTitle="لسنا نهاية ولا كسر"
+          letterContent="أنا ما كتبت هذا عشان أرجّع اللوم ولا أعدّ الغلطات، كتبته لأني زعلان ومتألم لكني بعد متمسك فينا ومؤمن إن اللي بينا يتصلّح بالهدوء وبالكلام الصادق، مو بالصراخ ولا بالإرجاع ولا بالانسحاب.. وفي النهاية ما أبي من كل هالكلام شي غير إنك تحسي إنك مسموعة ومفهومة، وإن اللي صار مو نهاية ولا كسر، كان لحظة تعب نقدر نعديها إذا مسكنا يد بعض بهدوء. خذي وقتك وراحتك، وأنا موجود بنفس المكان اللي كنت فيه دايماً إنسانة تهمني ومشاعرها تفرق معي، واللي بينا يستاهل نهدى عشانه مو نوجع بعض بسببه.. ومتى ما حسيتي إنك جاهزة نحكي ونصلح بدون ما نخسر شي حلو جمعنا، لأن وجودك بحياتي مو لحظة ولا ظرف، هو شي ثابت وأتمنى يبقى بهالشكل."
         />
 
         {/* 7. الفصل الرابع */}
@@ -969,14 +1062,16 @@ export default function App() {
           ))}
         </AccordionCard>
 
-        {/* فاصل غنائي (٤) */}
+        {/* فاصل غنائي (٤) ورسالة خاصة */}
         <AudioVinylCard
           artist="محمد عبده (جلسة عود)"
           interludeBadge="فاصل غنائي (٤)"
-          interludeText="بتذكري كيف كنا نضحك من قلبنا؟ بتذكر كيف كانت الأيام خفيفة والوقت يمر بدون ما نحس فيه؟.. اشتقت لهداك الهدوء، اشتقت للأمان اللي كان يملأ صدري بس لمجرد إني أسمع نبرة صوتك مبسوطة.. غريب كيف كنا نقدر نخلّي الدنيا كلها تسكت عشان نحكي، وكيف صارت كل ضحكة عشناها زمان توجع اليوم لأنها باقية لحالها بالذاكرة."
-          songQuote="من يقول الزين ما يكمل حلاه؟.. كل ما فيكِ اكتمل!"
           trackTitle="من يقول الزين"
           youtubeId="iukkrKjI_yE"
+        />
+        <EnvelopeCard
+          letterTitle="اشتقتُ لذاك الهدوء"
+          letterContent="بتذكري كيف كنا نضحك من قلبنا؟ بتذكر كيف كانت الأيام خفيفة والوقت يمر بدون ما نحس فيه؟.. اشتقت لهداك الهدوء، اشتقت للأمان اللي كان يملأ صدري بس لمجرد إني أسمع نبرة صوتك مبسوطة.. غريب كيف كنا نقدر نخلّي الدنيا كلها تسكت عشان نحكي، وكيف صارت كل ضحكة عشناها زمان توجع اليوم لأنها باقية لحالها بالذاكرة."
         />
 
         {/* 8. الفصل الخامس */}
@@ -993,14 +1088,16 @@ export default function App() {
           ))}
         </AccordionCard>
 
-        {/* فاصل غنائي (٥) */}
+        {/* فاصل غنائي (٥) ورسالة خاصة */}
         <AudioVinylCard
           artist="محمد عبده (جلسة عود)"
           interludeBadge="فاصل غنائي (٥)"
-          interludeText="صار لي وقت طويل ساكت.. مو لأني نسيت، ولا لأني ما عاد عندي حكي أحكيه، بس لأني حسيت إن الصمت أحياناً بكون أصدق وأرقى من ألف كلمة بنحكي فيها وما بتتفهم.. بعد تسعة أكتوبر، تعلّمت كيف أوقف مكاني بدون ما أمد إيدي وبدون ما أدير ظهري، تعلّمت كيف أحترم غيابك وأصون هيبتك بقلبي بدون ما أزعج هدوءك.. غريب كيف الإنسان ممكن يكون بعيد كل هالبعد، وبنفس الوقت حاضر بكل تفصيلة.. أنا ما طرقت بابك لأني بعرف قيمة نفسي وبطمن على راحتك، بس بنفس الوقت ما هان عليّ يوم عشناه سوا.. تارك هالصمت يحكي، وتارك الأيام تثبت إن اللي كان صادق، بضل وفي حتى وهو غايب."
-          songQuote="ما عاد بدري.. قلت لي راح الحنين؟"
           trackTitle="ما عاد بدري"
           youtubeId="gqoJ_1Loz1w"
+        />
+        <EnvelopeCard
+          letterTitle="رسالة آخر الليل"
+          letterContent="في آخر الليل كتب لها رسالة قبل ما ينام وقال لها: أنا أسف على كل مرة زعلتك فيها، وعلى كل كلمة حكيتها من غير ما أفكر بشعورك، وأسف على كل مرة كنت فيها سبب بدمعتك بدل ما أكون أنا الشخص اللي بيمسحها. يمكن ما كنت أقصد أوجعك بس بعرف إنه الوجع ما بفرق معه إذا كان بقصد أو بدون قصد، ويمكن اعتذاري ما بغير اللي صار بس صدقيني لو يرجع فيّ الزمن كنت راح أختار كلماتي ألف مرة قبل ما أحكيهم."
         />
 
         {/* 9. الفصل السادس */}
@@ -1017,14 +1114,16 @@ export default function App() {
           ))}
         </AccordionCard>
 
-        {/* فاصل غنائي (٦) */}
+        {/* فاصل غنائي (٦) ورسالة خاصة */}
         <AudioVinylCard
-          artist="عبد المجيد عبد الله"
+          artist="راشد الماجد"
           interludeBadge="فاصل غنائي (٦)"
-          interludeText="تعرفي شو اللي يخليني مطمئن وأنا ساكت؟ إني بعرف إن الصدق ما بيموت، وإن الأثر الحقيقي ما بتمحيه قسوة ولا بتبدله مسافات.. أنا ما تركتك عشان أنساكِ، ولا وقفت مكاني عشان أبيكِ؛ بس وقفت لأني بعرف إن اللي بينا أكبر من لعبة شد حبال.. كنت، ولساتني، بشوفك أطهر مرحلة بحياتي.. غبتِ أو بقيتِ، مكانك هون بالعمق، بالقرارات، وبالطريقة اللي صرت أشوف فيها الدنيا.. واللي بكون هيك، مستحيل يكون عابر، ومستحيل بيوم يقدر يحكي إنه نسي."
-          songQuote="يا بعدهم كلهم.. يا سراجي بينهم"
-          trackTitle="يا بعدهم كلهم"
-          youtubeId="gUXpRiMW1Lk"
+          trackTitle="بترجعين"
+          youtubeId="IhsjqzhkfTA"
+        />
+        <EnvelopeCard
+          letterTitle="الصدق لا يموت"
+          letterContent="تعرفي شو اللي يخليني مطمئن وأنا ساكت؟ إني بعرف إن الصدق ما بيموت، وإن الأثر الحقيقي ما بتمحيه قسوة ولا بتبدله مسافات.. أنا ما تركتك عشان أنساكِ، ولا وقفت مكاني عشان أبيكِ؛ بس وقفت لأني بعرف إن اللي بينا أكبر من لعبة شد حبال.. كنت، ولساتني، بشوفك أطهر مرحلة بحياتي.. غبتِ أو بقيتِ، مكانك هون بالعمق، بالقرارات، وبالطريقة اللي صرت أشوف فيها الدنيا.. واللي بكون هيك، مستحيل يكون عابر، ومستحيل بيوم يقدر يحكي إنه نسي."
         />
 
         {/* 10. الخاتمة: دعاءٌ في الغياب */}
