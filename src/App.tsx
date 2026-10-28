@@ -12,97 +12,7 @@ import {
 } from 'lucide-react';
 import { MANUSCRIPT_DOORS, SPECIAL_SECTIONS } from './manuscriptData';
 
-// Generative calm meditative piano soundscape using Web Audio API
-class AmbientSoundscape {
-  private ctx: AudioContext | null = null;
-  private masterGain: GainNode | null = null;
-  private isRunning: boolean = false;
-  private timer: number | null = null;
 
-  start() {
-    if (this.isRunning) return;
-    try {
-      const AudioCtx =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      this.ctx = new AudioCtx();
-      this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
-      this.masterGain.gain.exponentialRampToValueAtTime(0.28, this.ctx.currentTime + 2.0);
-      this.masterGain.connect(this.ctx.destination);
-      this.isRunning = true;
-      this.playChords();
-    } catch {
-      // AudioContext unavailable or restricted
-    }
-  }
-
-  private playTone(freq: number, time: number, duration: number, vol = 0.12) {
-    if (!this.ctx || !this.masterGain) return;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    const filter = this.ctx.createBiquadFilter();
-
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(520, time);
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, time);
-
-    gain.gain.setValueAtTime(0.0001, time);
-    gain.gain.exponentialRampToValueAtTime(vol, time + 0.25);
-    gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
-
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(this.masterGain);
-
-    osc.start(time);
-    osc.stop(time + duration);
-  }
-
-  private playChords() {
-    if (!this.isRunning || !this.ctx) return;
-    const chords = [
-      [155.56, 185.0, 233.08, 277.18, 370.0],
-      [138.59, 185.0, 220.0, 277.18, 329.63],
-      [146.83, 185.0, 220.0, 293.66, 370.0],
-      [164.81, 196.0, 246.94, 293.66, 392.0],
-    ];
-
-    let chordIdx = 0;
-    const step = () => {
-      if (!this.isRunning || !this.ctx) return;
-      const now = this.ctx.currentTime;
-      const chord = chords[chordIdx % chords.length];
-      chord.forEach((freq, i) => {
-        this.playTone(freq, now + i * 0.45, 5.5, 0.11);
-      });
-      chordIdx++;
-      this.timer = window.setTimeout(step, 4200);
-    };
-    step();
-  }
-
-  stop() {
-    if (!this.isRunning || !this.ctx || !this.masterGain) return;
-    try {
-      this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, this.ctx.currentTime);
-      this.masterGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 1.2);
-      if (this.timer) clearTimeout(this.timer);
-      setTimeout(() => {
-        if (this.ctx && this.ctx.state !== 'closed') {
-          this.ctx.close();
-        }
-        this.ctx = null;
-        this.masterGain = null;
-        this.isRunning = false;
-      }, 1300);
-    } catch {
-      this.isRunning = false;
-    }
-  }
-}
 
 interface AudioVinylCardProps {
   interludeBadge: string;
@@ -405,10 +315,7 @@ export default function App() {
     setShowGate(false);
     setPassphrase('');
     setExpandedSections({});
-    if (isAudioPlaying) {
-      soundscapeRef.current?.stop();
-      setIsAudioPlaying(false);
-    }
+    setIsAudioPlaying(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -462,25 +369,11 @@ export default function App() {
     });
   };
 
-  // Ambient soundscape audio state
-  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(true);
-  const soundscapeRef = useRef<AmbientSoundscape | null>(null);
-
-  useEffect(() => {
-    soundscapeRef.current = new AmbientSoundscape();
-    return () => {
-      soundscapeRef.current?.stop();
-    };
-  }, []);
+  // Background YouTube audio state
+  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
 
   const toggleAudio = () => {
-    if (isAudioPlaying) {
-      soundscapeRef.current?.stop();
-      setIsAudioPlaying(false);
-    } else {
-      soundscapeRef.current?.start();
-      setIsAudioPlaying(true);
-    }
+    setIsAudioPlaying((prev) => !prev);
   };
 
   // Restore scroll position on unlock
@@ -524,10 +417,7 @@ export default function App() {
       setIsUnlockingAnimation(true);
       setErrorMsg(false);
       setShake(false);
-      if (!isAudioPlaying) {
-        setIsAudioPlaying(true);
-        soundscapeRef.current?.start();
-      }
+      setIsAudioPlaying(true);
       setTimeout(() => {
         localStorage.setItem('sanctuary_unlocked', 'true');
         setUnlocked(true);
@@ -724,6 +614,20 @@ export default function App() {
         aria-hidden="true"
       />
 
+      {/* Persistent YouTube Background Audio Player */}
+      {isAudioPlaying && (
+        <div className="sr-only pointer-events-none" aria-hidden="true">
+          <iframe
+            id="bg-music-iframe"
+            width="1"
+            height="1"
+            src="https://www.youtube.com/embed/5g-s5WvLLek?autoplay=1&loop=1&playlist=5g-s5WvLLek&enablejsapi=1"
+            title="Background Music"
+            allow="autoplay"
+          />
+        </div>
+      )}
+
       {/* Screen 1: The Threshold Gate */}
       {!unlocked && !showGate && (
         <aside
@@ -757,10 +661,7 @@ export default function App() {
               type="button"
               onClick={() => {
                 setShowGate(true);
-                if (!isAudioPlaying) {
-                  setIsAudioPlaying(true);
-                  soundscapeRef.current?.start();
-                }
+                setIsAudioPlaying(true);
               }}
               className="bg-[#851A26] hover:bg-[#68141F] text-[#FAF6F0] border-[1.5px] border-[#410407] text-base sm:text-lg cursor-pointer px-9 py-3.5 rounded-full transition-all duration-300 flex items-center gap-2.5 outline-none shadow-[3px_3px_0px_#410407] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none font-bold"
             >
@@ -768,18 +669,6 @@ export default function App() {
               <span className="text-sm opacity-90">↓</span>
             </button>
           </div>
-
-          {/* Background Ambient Soundtrack (زحمة حكي) */}
-          {isAudioPlaying && (
-            <iframe
-              width="1"
-              height="1"
-              src="https://www.youtube.com/embed/5g-s5WvLLek?autoplay=1&loop=1&playlist=5g-s5WvLLek&enablejsapi=1"
-              title="Background Ambient Music - زحمة حكي"
-              allow="autoplay; encrypted-media"
-              className="hidden pointer-events-none opacity-0 fixed bottom-0 left-0"
-            />
-          )}
         </aside>
       )}
 
