@@ -213,3 +213,32 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb:hover {
   background: #851A26;
 }
+
+/* Antique Manuscript Page Unfold Animation for AccordionCard */
+@keyframes accordionPageOpen {
+  0% {
+    opacity: 0;
+    transform: scale(0.975) translateY(-8px);
+  }
+  50% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.accordion-page-reveal {
+  animation: accordionPageOpen 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top center;
+  will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accordion-page-reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

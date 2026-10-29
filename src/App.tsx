@@ -181,7 +181,179 @@ function EnvelopeCard({ letterTitle, letterContent }: EnvelopeCardProps) {
   );
 }
 
-// Door Content Renderer Component for Unabridged Prose
+// Door Prose Renderer Component with Generous Vertical Breathing & Quote Embellishment
+function DoorProse({ paragraphs }: { paragraphs: string[] }) {
+  return (
+    <div className="space-y-0 text-justify font-['Scheherazade_New',serif]">
+      {paragraphs.map((p, idx) => {
+        const isQuote = p.startsWith('«') || (p.startsWith('(') && p.endsWith(')'));
+        const isHighlight =
+          p.includes('المعنى الكامل للصورة') ||
+          p.includes('لَمْ أَكُنْ عَابِراً') ||
+          p.includes('وَلَنْ تَكُونِي') ||
+          p.includes('ثلاثةٍ وعشرين عاماً') ||
+          p.includes('نَــو الكَلِمَة') ||
+          p.includes('تسعمائةٍ وأحدَ عشرَ يوماً');
+
+        if (isQuote) {
+          return (
+            <blockquote
+              key={idx}
+              className="my-7 p-5 sm:p-6 bg-[#FAF6F0] border-r-4 border-l border-y border-[#851A26] border-l-[#851A26]/20 border-y-[#851A26]/10 text-[#410407] italic font-medium leading-[2.4] tracking-wide rounded-2xl shadow-xs relative overflow-hidden"
+            >
+              <div className="absolute top-2 left-3 text-2xl text-[#851A26]/25 select-none font-serif">❞</div>
+              <div className="relative z-10 font-['Scheherazade_New',serif]">
+                {p}
+              </div>
+            </blockquote>
+          );
+        }
+
+        if (isHighlight) {
+          return (
+            <div
+              key={idx}
+              className="my-7 p-5 sm:p-6 rounded-2xl bg-[#F6ECE8] border border-[#851A26]/25 font-bold text-[#410407] leading-[2.3] tracking-wide shadow-xs relative"
+            >
+              <span className="text-[#851A26] text-xs font-mono ml-2 select-none">✦</span>
+              <span>{p}</span>
+            </div>
+          );
+        }
+
+        return (
+          <p
+            key={idx}
+            className="mb-7 leading-[2.3] text-[#2F1216] font-['Scheherazade_New',serif] tracking-normal last:mb-0"
+          >
+            {p}
+          </p>
+        );
+      })}
+
+      <div className="text-center text-[#851A26]/40 text-sm mt-8 select-none font-serif">
+        ✦ · ❖ · ✦
+      </div>
+    </div>
+  );
+}
+
+// Nested Interactive Door Accordion Component
+interface DoorAccordionCardProps {
+  id: string;
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+function DoorAccordionCard({ id, isOpen, onToggle }: DoorAccordionCardProps) {
+  const door = MANUSCRIPT_DOORS[id];
+  if (!door) return null;
+
+  let doorBadge = '';
+  let doorTitle = door.title;
+
+  if (door.title.includes(':')) {
+    const parts = door.title.split(':');
+    doorBadge = parts[0].trim();
+    doorTitle = parts.slice(1).join(':').trim();
+  } else if (door.title.includes('—')) {
+    const parts = door.title.split('—');
+    doorBadge = parts[0].trim();
+    doorTitle = parts.slice(1).join('—').trim();
+  }
+
+  return (
+    <div
+      id={id}
+      className={`door-accordion-card scroll-mt-24 bg-[#FFFDF9] border-[1.5px] rounded-[22px] transition-all duration-300 overflow-hidden my-3 ${
+        isOpen
+          ? 'border-[#851A26] shadow-[4px_4px_0px_#851A26]'
+          : 'border-[#410407]/35 hover:border-[#851A26] shadow-[2px_2px_0px_#410407] hover:shadow-[3px_3px_0px_#851A26]'
+      }`}
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full p-4 sm:p-5 flex items-center justify-between gap-3 text-right cursor-pointer bg-[#FFFDF9] hover:bg-[#F6ECE8]/60 transition-colors border-none outline-none select-none"
+        aria-expanded={isOpen}
+      >
+        <div className="flex items-center gap-2.5 flex-wrap flex-1 min-w-0">
+          {doorBadge && (
+            <span
+              className={`shrink-0 px-3 py-1 rounded-full text-xs font-bold transition-all shadow-xs ${
+                isOpen
+                  ? 'bg-[#851A26] text-[#FAF6F0] border border-[#410407]'
+                  : 'bg-[#F6ECE8] text-[#851A26] border border-[#851A26]/30'
+              }`}
+            >
+              ✦ {doorBadge}
+            </span>
+          )}
+          <h4 className="text-base sm:text-lg md:text-xl font-bold text-[#410407] font-['Scheherazade_New',serif] m-0 transition-colors">
+            {doorTitle}
+          </h4>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0 select-none">
+          <span className="text-xs text-[#851A26] font-semibold hidden sm:inline-block">
+            {isOpen ? 'طوي الباب' : 'اقرئي الباب'}
+          </span>
+          <div
+            className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#410407]/30 flex items-center justify-center transition-all duration-300 ${
+              isOpen
+                ? 'bg-[#851A26] text-[#FAF6F0] rotate-180'
+                : 'bg-[#FAF6F0] text-[#851A26] hover:bg-[#E6D6C5]'
+            }`}
+          >
+            <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </div>
+        </div>
+      </button>
+
+      {isOpen && (
+        <div className="accordion-page-reveal px-5 sm:px-8 pb-8 pt-5 border-t border-[#410407]/15 bg-[#FFFDF9] origin-top">
+          <DoorProse paragraphs={door.paragraphs} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Chapter Doors Sub-Header Control Bar
+interface ChapterDoorsControlBarProps {
+  doorCount: number;
+  onOpenAll: () => void;
+  onCollapseAll: () => void;
+}
+
+function ChapterDoorsControlBar({ doorCount, onOpenAll, onCollapseAll }: ChapterDoorsControlBarProps) {
+  return (
+    <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#410407]/15 flex-wrap gap-2 text-xs select-none">
+      <span className="text-[#851A26] font-bold flex items-center gap-1.5">
+        <span className="w-2 h-2 rounded-full bg-[#851A26]" />
+        <span>أبواب هذا الفصل ({doorCount}) — انقري لاختيار أي باب وقراءته</span>
+      </span>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onOpenAll}
+          className="px-3 py-1 rounded-full bg-[#F6ECE8] text-[#851A26] border border-[#851A26]/30 hover:bg-[#E6D6C5] font-semibold transition-colors cursor-pointer text-xs"
+        >
+          فتح جميع الأبواب
+        </button>
+        <button
+          type="button"
+          onClick={onCollapseAll}
+          className="px-3 py-1 rounded-full bg-[#FAF6F0] text-[#851A26] border border-[#410407]/30 hover:bg-[#E6D6C5] font-semibold transition-colors cursor-pointer text-xs"
+        >
+          طي الأبواب
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Door Content Renderer Component for Unabridged Prose (Fallback / Direct rendering)
 function DoorContent({ id }: { id: string }) {
   const door = MANUSCRIPT_DOORS[id];
   if (!door) return null;
@@ -191,35 +363,7 @@ function DoorContent({ id }: { id: string }) {
       <h4 className="text-xl md:text-2xl font-bold text-[#410407] mb-4 font-['Scheherazade_New',serif]">
         {door.title}
       </h4>
-      <div className="space-y-4 text-justify">
-        {door.paragraphs.map((p, idx) => {
-          // Detect quotes or highlighted dialogue
-          const isQuote = p.startsWith('«') || (p.startsWith('(') && p.endsWith(')'));
-          const isHighlight = p.includes('المعنى الكامل للصورة') || p.includes('لَمْ أَكُنْ عَابِراً') || p.includes('ثلاثةٍ وعشرين عاماً');
-
-          if (isQuote) {
-            return (
-              <blockquote key={idx} className="my-4 p-4 bg-[#1A1817] border-r-4 border-[#851A26] text-[#EDE7DF] italic font-medium leading-relaxed rounded-l-xl shadow-sm">
-                {p}
-              </blockquote>
-            );
-          }
-
-          if (isHighlight) {
-            return (
-              <p key={idx} className="p-4 rounded-xl bg-[#F6ECE8] border border-[#851A26]/20 font-bold text-[#410407] leading-relaxed">
-                {p}
-              </p>
-            );
-          }
-
-          return (
-            <p key={idx} className="leading-[2.2] text-[#2F1216]">
-              {p}
-            </p>
-          );
-        })}
-      </div>
+      <DoorProse paragraphs={door.paragraphs} />
     </div>
   );
 }
@@ -288,7 +432,7 @@ function AccordionCard({
       </button>
 
       {isOpen && (
-        <div className="px-6 sm:px-10 pb-8 pt-4 border-t border-[#410407]/15 animate-[fadeIn_0.35s_ease-out]">
+        <div className="accordion-page-reveal px-6 sm:px-10 pb-8 pt-4 border-t border-[#410407]/15 origin-top">
           {children}
         </div>
       )}
@@ -394,6 +538,26 @@ export default function App() {
 
   const collapseAllSections = () => {
     setExpandedSections({});
+  };
+
+  const openAllDoorsInChapter = (doorIds: string[]) => {
+    setExpandedSections((prev) => {
+      const next = { ...prev };
+      doorIds.forEach((id) => {
+        next[id] = true;
+      });
+      return next;
+    });
+  };
+
+  const collapseAllDoorsInChapter = (doorIds: string[]) => {
+    setExpandedSections((prev) => {
+      const next = { ...prev };
+      doorIds.forEach((id) => {
+        delete next[id];
+      });
+      return next;
+    });
   };
 
   const handleIncreaseFont = () => {
@@ -569,8 +733,14 @@ export default function App() {
   const scrollToSection = (id: string) => {
     setDrawerOpen(false);
     const parentId = doorToChapterMap[id] || id;
-    openSection(parentId);
-    openSection(id);
+
+    // Auto-expand parent chapter AND the specific door together
+    setExpandedSections((prev) => ({
+      ...prev,
+      [parentId]: true,
+      [id]: true,
+    }));
+
     setTimeout(() => {
       const element = document.getElementById(id);
       if (element) {
@@ -582,7 +752,7 @@ export default function App() {
           element.classList.remove('section-focus-highlight');
         }, 1200);
       }
-    }, 120);
+    }, 240);
   };
 
   // Chapter drawer items mapping
@@ -960,9 +1130,26 @@ export default function App() {
             ))}
           </div>
 
-          <DoorContent id="intro-door-1" />
-          <DoorContent id="intro-door-2" />
-          <DoorContent id="intro-door-3" />
+          {(() => {
+            const doorIds = ['intro-door-1', 'intro-door-2', 'intro-door-3'];
+            return (
+              <>
+                <ChapterDoorsControlBar
+                  doorCount={doorIds.length}
+                  onOpenAll={() => openAllDoorsInChapter(doorIds)}
+                  onCollapseAll={() => collapseAllDoorsInChapter(doorIds)}
+                />
+                {doorIds.map((doorId) => (
+                  <DoorAccordionCard
+                    key={doorId}
+                    id={doorId}
+                    isOpen={!!expandedSections[doorId]}
+                    onToggle={() => toggleSection(doorId)}
+                  />
+                ))}
+              </>
+            );
+          })()}
         </AccordionCard>
 
         {/* 4. الفصل الأول */}
@@ -974,9 +1161,26 @@ export default function App() {
           isOpen={!!expandedSections['chapter-1']}
           onToggle={() => toggleSection('chapter-1')}
         >
-          <DoorContent id="ch1-door-1" />
-          <DoorContent id="ch1-door-2" />
-          <DoorContent id="ch1-door-3" />
+          {(() => {
+            const doorIds = ['ch1-door-1', 'ch1-door-2', 'ch1-door-3'];
+            return (
+              <>
+                <ChapterDoorsControlBar
+                  doorCount={doorIds.length}
+                  onOpenAll={() => openAllDoorsInChapter(doorIds)}
+                  onCollapseAll={() => collapseAllDoorsInChapter(doorIds)}
+                />
+                {doorIds.map((doorId) => (
+                  <DoorAccordionCard
+                    key={doorId}
+                    id={doorId}
+                    isOpen={!!expandedSections[doorId]}
+                    onToggle={() => toggleSection(doorId)}
+                  />
+                ))}
+              </>
+            );
+          })()}
         </AccordionCard>
 
         {/* فاصل غنائي (١) ورسالة خاصة */}
@@ -1000,9 +1204,26 @@ export default function App() {
           isOpen={!!expandedSections['chapter-2']}
           onToggle={() => toggleSection('chapter-2')}
         >
-          {Array.from({ length: 12 }, (_, i) => (
-            <DoorContent key={i} id={`ch2-door-${i + 1}`} />
-          ))}
+          {(() => {
+            const doorIds = Array.from({ length: 12 }, (_, i) => `ch2-door-${i + 1}`);
+            return (
+              <>
+                <ChapterDoorsControlBar
+                  doorCount={doorIds.length}
+                  onOpenAll={() => openAllDoorsInChapter(doorIds)}
+                  onCollapseAll={() => collapseAllDoorsInChapter(doorIds)}
+                />
+                {doorIds.map((doorId) => (
+                  <DoorAccordionCard
+                    key={doorId}
+                    id={doorId}
+                    isOpen={!!expandedSections[doorId]}
+                    onToggle={() => toggleSection(doorId)}
+                  />
+                ))}
+              </>
+            );
+          })()}
         </AccordionCard>
 
         {/* فاصل غنائي (٢) ورسالة خاصة */}
@@ -1026,9 +1247,26 @@ export default function App() {
           isOpen={!!expandedSections['chapter-3']}
           onToggle={() => toggleSection('chapter-3')}
         >
-          {Array.from({ length: 12 }, (_, i) => (
-            <DoorContent key={i} id={`ch3-door-${i + 1}`} />
-          ))}
+          {(() => {
+            const doorIds = Array.from({ length: 12 }, (_, i) => `ch3-door-${i + 1}`);
+            return (
+              <>
+                <ChapterDoorsControlBar
+                  doorCount={doorIds.length}
+                  onOpenAll={() => openAllDoorsInChapter(doorIds)}
+                  onCollapseAll={() => collapseAllDoorsInChapter(doorIds)}
+                />
+                {doorIds.map((doorId) => (
+                  <DoorAccordionCard
+                    key={doorId}
+                    id={doorId}
+                    isOpen={!!expandedSections[doorId]}
+                    onToggle={() => toggleSection(doorId)}
+                  />
+                ))}
+              </>
+            );
+          })()}
         </AccordionCard>
 
         {/* فاصل غنائي (٣) ورسالة خاصة */}
@@ -1052,9 +1290,26 @@ export default function App() {
           isOpen={!!expandedSections['chapter-4']}
           onToggle={() => toggleSection('chapter-4')}
         >
-          {Array.from({ length: 12 }, (_, i) => (
-            <DoorContent key={i} id={`ch4-door-${i + 1}`} />
-          ))}
+          {(() => {
+            const doorIds = Array.from({ length: 12 }, (_, i) => `ch4-door-${i + 1}`);
+            return (
+              <>
+                <ChapterDoorsControlBar
+                  doorCount={doorIds.length}
+                  onOpenAll={() => openAllDoorsInChapter(doorIds)}
+                  onCollapseAll={() => collapseAllDoorsInChapter(doorIds)}
+                />
+                {doorIds.map((doorId) => (
+                  <DoorAccordionCard
+                    key={doorId}
+                    id={doorId}
+                    isOpen={!!expandedSections[doorId]}
+                    onToggle={() => toggleSection(doorId)}
+                  />
+                ))}
+              </>
+            );
+          })()}
         </AccordionCard>
 
         {/* فاصل غنائي (٤) ورسالة خاصة */}
@@ -1078,9 +1333,26 @@ export default function App() {
           isOpen={!!expandedSections['chapter-5']}
           onToggle={() => toggleSection('chapter-5')}
         >
-          {Array.from({ length: 6 }, (_, i) => (
-            <DoorContent key={i} id={`ch5-door-${i + 1}`} />
-          ))}
+          {(() => {
+            const doorIds = Array.from({ length: 6 }, (_, i) => `ch5-door-${i + 1}`);
+            return (
+              <>
+                <ChapterDoorsControlBar
+                  doorCount={doorIds.length}
+                  onOpenAll={() => openAllDoorsInChapter(doorIds)}
+                  onCollapseAll={() => collapseAllDoorsInChapter(doorIds)}
+                />
+                {doorIds.map((doorId) => (
+                  <DoorAccordionCard
+                    key={doorId}
+                    id={doorId}
+                    isOpen={!!expandedSections[doorId]}
+                    onToggle={() => toggleSection(doorId)}
+                  />
+                ))}
+              </>
+            );
+          })()}
         </AccordionCard>
 
         {/* فاصل غنائي (٥) ورسالة خاصة */}
@@ -1104,9 +1376,26 @@ export default function App() {
           isOpen={!!expandedSections['chapter-6']}
           onToggle={() => toggleSection('chapter-6')}
         >
-          {Array.from({ length: 12 }, (_, i) => (
-            <DoorContent key={i} id={`ch6-door-${i + 1}`} />
-          ))}
+          {(() => {
+            const doorIds = Array.from({ length: 12 }, (_, i) => `ch6-door-${i + 1}`);
+            return (
+              <>
+                <ChapterDoorsControlBar
+                  doorCount={doorIds.length}
+                  onOpenAll={() => openAllDoorsInChapter(doorIds)}
+                  onCollapseAll={() => collapseAllDoorsInChapter(doorIds)}
+                />
+                {doorIds.map((doorId) => (
+                  <DoorAccordionCard
+                    key={doorId}
+                    id={doorId}
+                    isOpen={!!expandedSections[doorId]}
+                    onToggle={() => toggleSection(doorId)}
+                  />
+                ))}
+              </>
+            );
+          })()}
         </AccordionCard>
 
         {/* فاصل غنائي (٦) ورسالة خاصة */}
