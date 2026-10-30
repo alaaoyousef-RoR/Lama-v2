@@ -798,63 +798,55 @@ export default function App() {
     'intro-door-1': 'sec-introduction',
     'intro-door-2': 'sec-introduction',
     'intro-door-3': 'sec-introduction',
+    'intro-p1': 'sec-introduction',
+    'intro-p2': 'sec-introduction',
+    'intro-p3': 'sec-introduction',
     'ch1-door-1': 'chapter-1',
     'ch1-door-2': 'chapter-1',
     'ch1-door-3': 'chapter-1',
+    'ch1-p1': 'chapter-1',
+    'ch1-p2': 'chapter-1',
+    'ch1-p3': 'chapter-1',
     'ch2-door-1': 'chapter-2',
     'ch2-door-2': 'chapter-2',
     'ch2-door-3': 'chapter-2',
     'ch2-door-4': 'chapter-2',
     'ch2-door-5': 'chapter-2',
     'ch2-door-6': 'chapter-2',
-    'ch2-door-7': 'chapter-2',
-    'ch2-door-8': 'chapter-2',
-    'ch2-door-9': 'chapter-2',
-    'ch2-door-10': 'chapter-2',
-    'ch2-door-11': 'chapter-2',
-    'ch2-door-12': 'chapter-2',
+    'ch2-p1': 'chapter-2',
+    'ch2-p2': 'chapter-2',
+    'ch2-p3': 'chapter-2',
+    'ch2-p4': 'chapter-2',
+    'ch2-p5': 'chapter-2',
+    'ch2-p6': 'chapter-2',
     'ch3-door-1': 'chapter-3',
     'ch3-door-2': 'chapter-3',
     'ch3-door-3': 'chapter-3',
     'ch3-door-4': 'chapter-3',
-    'ch3-door-5': 'chapter-3',
-    'ch3-door-6': 'chapter-3',
-    'ch3-door-7': 'chapter-3',
-    'ch3-door-8': 'chapter-3',
-    'ch3-door-9': 'chapter-3',
-    'ch3-door-10': 'chapter-3',
-    'ch3-door-11': 'chapter-3',
-    'ch3-door-12': 'chapter-3',
+    'ch3-p1': 'chapter-3',
+    'ch3-p2': 'chapter-3',
+    'ch3-p3': 'chapter-3',
+    'ch3-p4': 'chapter-3',
     'ch4-door-1': 'chapter-4',
     'ch4-door-2': 'chapter-4',
     'ch4-door-3': 'chapter-4',
     'ch4-door-4': 'chapter-4',
-    'ch4-door-5': 'chapter-4',
-    'ch4-door-6': 'chapter-4',
-    'ch4-door-7': 'chapter-4',
-    'ch4-door-8': 'chapter-4',
-    'ch4-door-9': 'chapter-4',
-    'ch4-door-10': 'chapter-4',
-    'ch4-door-11': 'chapter-4',
-    'ch4-door-12': 'chapter-4',
+    'ch4-p1': 'chapter-4',
+    'ch4-p2': 'chapter-4',
+    'ch4-p3': 'chapter-4',
+    'ch4-p4': 'chapter-4',
     'ch5-door-1': 'chapter-5',
     'ch5-door-2': 'chapter-5',
     'ch5-door-3': 'chapter-5',
-    'ch5-door-4': 'chapter-5',
-    'ch5-door-5': 'chapter-5',
-    'ch5-door-6': 'chapter-5',
+    'ch5-p1': 'chapter-5',
+    'ch5-p2': 'chapter-5',
+    'ch5-p3': 'chapter-5',
     'ch6-door-1': 'chapter-6',
     'ch6-door-2': 'chapter-6',
     'ch6-door-3': 'chapter-6',
-    'ch6-door-4': 'chapter-6',
-    'ch6-door-5': 'chapter-6',
-    'ch6-door-6': 'chapter-6',
-    'ch6-door-7': 'chapter-6',
-    'ch6-door-8': 'chapter-6',
-    'ch6-door-9': 'chapter-6',
-    'ch6-door-10': 'chapter-6',
-    'ch6-door-11': 'chapter-6',
-    'ch6-door-12': 'chapter-6',
+    'ch6-p1': 'chapter-6',
+    'ch6-p2': 'chapter-6',
+    'ch6-p3': 'chapter-6',
     'sec-conclusion': 'sec-conclusion',
   };
 
@@ -950,7 +942,7 @@ export default function App() {
     {
       title: 'الفصل الثاني: لغتنا التي لا يفهمها أحد',
       id: 'chapter-2',
-      doors: Array.from({ length: 12 }, (_, i) => ({
+      doors: Array.from({ length: 6 }, (_, i) => ({
         id: `ch2-door-${i + 1}`,
         title: MANUSCRIPT_DOORS[`ch2-door-${i + 1}`]?.title || `الباب ${i + 1}`,
       })),
@@ -958,7 +950,7 @@ export default function App() {
     {
       title: 'الفصل الثالث: الأيام الصعبة والخوف',
       id: 'chapter-3',
-      doors: Array.from({ length: 12 }, (_, i) => ({
+      doors: Array.from({ length: 4 }, (_, i) => ({
         id: `ch3-door-${i + 1}`,
         title: MANUSCRIPT_DOORS[`ch3-door-${i + 1}`]?.title || `الباب ${i + 1}`,
       })),
@@ -966,7 +958,7 @@ export default function App() {
     {
       title: 'الفصل الرابع: الأيام الحلوة وضحكتك',
       id: 'chapter-4',
-      doors: Array.from({ length: 12 }, (_, i) => ({
+      doors: Array.from({ length: 4 }, (_, i) => ({
         id: `ch4-door-${i + 1}`,
         title: MANUSCRIPT_DOORS[`ch4-door-${i + 1}`]?.title || `الباب ${i + 1}`,
       })),
@@ -974,7 +966,7 @@ export default function App() {
     {
       title: 'الفصل الخامس: بعد التاسع من أكتوبر',
       id: 'chapter-5',
-      doors: Array.from({ length: 6 }, (_, i) => ({
+      doors: Array.from({ length: 3 }, (_, i) => ({
         id: `ch5-door-${i + 1}`,
         title: MANUSCRIPT_DOORS[`ch5-door-${i + 1}`]?.title || `الباب ${i + 1}`,
       })),
@@ -982,7 +974,7 @@ export default function App() {
     {
       title: 'الفصل السادس: ما يبقى بعد كل شيء',
       id: 'chapter-6',
-      doors: Array.from({ length: 12 }, (_, i) => ({
+      doors: Array.from({ length: 3 }, (_, i) => ({
         id: `ch6-door-${i + 1}`,
         title: MANUSCRIPT_DOORS[`ch6-door-${i + 1}`]?.title || `الباب ${i + 1}`,
       })),
@@ -1408,12 +1400,12 @@ export default function App() {
           id="chapter-2"
           badge="الفصل الثاني"
           title="الفصل الثاني: لغتنا التي لا يفهمها أحد"
-          subtitle="١٢ باباً في الشفرات والخصوصية"
+          subtitle="٦ أبواب في الشفرات والخصوصية"
           isOpen={!!expandedSections['chapter-2']}
           onToggle={() => toggleSection('chapter-2')}
         >
           {(() => {
-            const doorIds = Array.from({ length: 12 }, (_, i) => `ch2-door-${i + 1}`);
+            const doorIds = Array.from({ length: 6 }, (_, i) => `ch2-door-${i + 1}`);
             return (
               <>
                 <ChapterDoorsControlBar
@@ -1453,12 +1445,12 @@ export default function App() {
           id="chapter-3"
           badge="الفصل الثالث"
           title="الفصل الثالث: الأيام الصعبة والخوف"
-          subtitle="١٢ باباً في المراجعات والنضج"
+          subtitle="٤ أبواب في المراجعات والنضج"
           isOpen={!!expandedSections['chapter-3']}
           onToggle={() => toggleSection('chapter-3')}
         >
           {(() => {
-            const doorIds = Array.from({ length: 12 }, (_, i) => `ch3-door-${i + 1}`);
+            const doorIds = Array.from({ length: 4 }, (_, i) => `ch3-door-${i + 1}`);
             return (
               <>
                 <ChapterDoorsControlBar
@@ -1498,12 +1490,12 @@ export default function App() {
           id="chapter-4"
           badge="الفصل الرابع"
           title="الفصل الرابع: الأيام الحلوة وضحكتك"
-          subtitle="١٢ باباً في البهاء والفرح"
+          subtitle="٤ أبواب في البهاء والفرح"
           isOpen={!!expandedSections['chapter-4']}
           onToggle={() => toggleSection('chapter-4')}
         >
           {(() => {
-            const doorIds = Array.from({ length: 12 }, (_, i) => `ch4-door-${i + 1}`);
+            const doorIds = Array.from({ length: 4 }, (_, i) => `ch4-door-${i + 1}`);
             return (
               <>
                 <ChapterDoorsControlBar
@@ -1543,12 +1535,12 @@ export default function App() {
           id="chapter-5"
           badge="الفصل الخامس"
           title="الفصل الخامس: بعد التاسع من أكتوبر"
-          subtitle="٦ أبواب في الثبات والصمت الوقور"
+          subtitle="٣ أبواب في الثبات والصمت الوقور"
           isOpen={!!expandedSections['chapter-5']}
           onToggle={() => toggleSection('chapter-5')}
         >
           {(() => {
-            const doorIds = Array.from({ length: 6 }, (_, i) => `ch5-door-${i + 1}`);
+            const doorIds = Array.from({ length: 3 }, (_, i) => `ch5-door-${i + 1}`);
             return (
               <>
                 <ChapterDoorsControlBar
@@ -1588,12 +1580,12 @@ export default function App() {
           id="chapter-6"
           badge="الفصل السادس"
           title="الفصل السادس: ما يبقى بعد كل شيء"
-          subtitle="١٢ باباً في الخلود والأثر الأبدي"
+          subtitle="٣ أبواب في الخلود والأثر الأبدي"
           isOpen={!!expandedSections['chapter-6']}
           onToggle={() => toggleSection('chapter-6')}
         >
           {(() => {
-            const doorIds = Array.from({ length: 12 }, (_, i) => `ch6-door-${i + 1}`);
+            const doorIds = Array.from({ length: 3 }, (_, i) => `ch6-door-${i + 1}`);
             return (
               <>
                 <ChapterDoorsControlBar
