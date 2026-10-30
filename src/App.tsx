@@ -9,6 +9,9 @@ import {
   X,
   Lock,
   Stamp,
+  Clock,
+  Bookmark,
+  BookmarkCheck,
 } from 'lucide-react';
 import { MANUSCRIPT_DOORS, SPECIAL_SECTIONS } from './manuscriptData';
 
@@ -243,9 +246,17 @@ interface DoorAccordionCardProps {
   id: string;
   isOpen: boolean;
   onToggle: () => void;
+  isBookmarked?: boolean;
+  onBookmark?: () => void;
 }
 
-function DoorAccordionCard({ id, isOpen, onToggle }: DoorAccordionCardProps) {
+function DoorAccordionCard({
+  id,
+  isOpen,
+  onToggle,
+  isBookmarked = false,
+  onBookmark,
+}: DoorAccordionCardProps) {
   const door = MANUSCRIPT_DOORS[id];
   if (!door) return null;
 
@@ -266,22 +277,24 @@ function DoorAccordionCard({ id, isOpen, onToggle }: DoorAccordionCardProps) {
     <div
       id={id}
       className={`door-accordion-card scroll-mt-24 bg-[#FFFDF9] border-[1.5px] rounded-[22px] transition-all duration-300 overflow-hidden my-3 ${
-        isOpen
+        isBookmarked
+          ? 'border-[#851A26] ring-2 ring-[#851A26]/30 shadow-[4px_4px_0px_#851A26]'
+          : isOpen
           ? 'border-[#851A26] shadow-[4px_4px_0px_#851A26]'
           : 'border-[#410407]/35 hover:border-[#851A26] shadow-[2px_2px_0px_#410407] hover:shadow-[3px_3px_0px_#851A26]'
       }`}
     >
-      <button
-        type="button"
-        onClick={onToggle}
-        className="w-full p-4 sm:p-5 flex items-center justify-between gap-3 text-right cursor-pointer bg-[#FFFDF9] hover:bg-[#F6ECE8]/60 transition-colors border-none outline-none select-none"
-        aria-expanded={isOpen}
-      >
-        <div className="flex items-center gap-2.5 flex-wrap flex-1 min-w-0">
+      <div className="w-full p-3.5 sm:p-5 flex items-center justify-between gap-2.5 sm:gap-3 text-right bg-[#FFFDF9] hover:bg-[#F6ECE8]/60 transition-colors select-none">
+        <button
+          type="button"
+          onClick={onToggle}
+          className="flex items-center gap-2 sm:gap-2.5 flex-wrap flex-1 min-w-0 text-right cursor-pointer bg-transparent border-none outline-none"
+          aria-expanded={isOpen}
+        >
           {doorBadge && (
             <span
-              className={`shrink-0 px-3 py-1 rounded-full text-xs font-bold transition-all shadow-xs ${
-                isOpen
+              className={`shrink-0 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all shadow-xs ${
+                isOpen || isBookmarked
                   ? 'bg-[#851A26] text-[#FAF6F0] border border-[#410407]'
                   : 'bg-[#F6ECE8] text-[#851A26] border border-[#851A26]/30'
               }`}
@@ -292,27 +305,100 @@ function DoorAccordionCard({ id, isOpen, onToggle }: DoorAccordionCardProps) {
           <h4 className="text-base sm:text-lg md:text-xl font-bold text-[#410407] font-['Scheherazade_New',serif] m-0 transition-colors">
             {doorTitle}
           </h4>
-        </div>
+        </button>
 
-        <div className="flex items-center gap-2 shrink-0 select-none">
-          <span className="text-xs text-[#851A26] font-semibold hidden sm:inline-block">
-            {isOpen ? 'طوي الباب' : 'اقرئي الباب'}
-          </span>
-          <div
-            className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#410407]/30 flex items-center justify-center transition-all duration-300 ${
-              isOpen
-                ? 'bg-[#851A26] text-[#FAF6F0] rotate-180'
-                : 'bg-[#FAF6F0] text-[#851A26] hover:bg-[#E6D6C5]'
-            }`}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 select-none">
+          {/* Explicit Bookmark Button on door header */}
+          {onBookmark && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onBookmark();
+              }}
+              className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer shadow-xs ${
+                isBookmarked
+                  ? 'bg-[#851A26] text-[#FAF6F0] border border-[#410407]'
+                  : 'bg-[#FAF6F0] text-[#851A26] hover:bg-[#E6D6C5] border border-[#410407]/30'
+              }`}
+              title={
+                isBookmarked
+                  ? 'مكان وقوفكِ الحالي — انقري لإلغاء العلامة'
+                  : 'حفظ مكان وقوفي عند هذا الباب'
+              }
+            >
+              {isBookmarked ? (
+                <>
+                  <BookmarkCheck className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">مكانكِ الحالي 🔖</span>
+                  <span className="sm:hidden">مكانكِ 🔖</span>
+                </>
+              ) : (
+                <>
+                  <Bookmark className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">حفظ مكاني</span>
+                </>
+              )}
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={onToggle}
+            className="flex items-center gap-1.5 cursor-pointer bg-transparent border-none outline-none"
+            aria-label={isOpen ? 'طوي الباب' : 'اقرئي الباب'}
           >
-            <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </div>
+            <span className="text-xs text-[#851A26] font-semibold hidden sm:inline-block">
+              {isOpen ? 'طوي الباب' : 'اقرئي الباب'}
+            </span>
+            <div
+              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#410407]/30 flex items-center justify-center transition-all duration-300 ${
+                isOpen
+                  ? 'bg-[#851A26] text-[#FAF6F0] rotate-180'
+                  : 'bg-[#FAF6F0] text-[#851A26] hover:bg-[#E6D6C5]'
+              }`}
+            >
+              <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            </div>
+          </button>
         </div>
-      </button>
+      </div>
 
       {isOpen && (
         <div className="accordion-page-reveal px-5 sm:px-8 pb-8 pt-5 border-t border-[#410407]/15 bg-[#FFFDF9] origin-top">
           <DoorProse paragraphs={door.paragraphs} />
+
+          {/* Door Prose Bookmark Explicit Action Pill */}
+          {onBookmark && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-8 pt-5 border-t border-[#410407]/15 bg-[#FAF6F0]/70 rounded-2xl p-4 border border-[#410407]/20">
+              <span className="text-xs sm:text-sm text-[#851A26] font-medium font-['Scheherazade_New',serif]">
+                {isBookmarked
+                  ? '✦ هذا الباب محفوظ كعلامة توقّف لكِ.. ستجدينه بأعلى الصفحة متى ما عدتِ للمتابعة.'
+                  : 'أردتِ التوقّف هنا ومتابعة القراءة لاحقاً؟ احفظي مكانكِ الآن لتواصلي بيسر:'}
+              </span>
+              <button
+                type="button"
+                onClick={onBookmark}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer shadow-xs shrink-0 ${
+                  isBookmarked
+                    ? 'bg-[#851A26] text-[#FAF6F0] border border-[#410407] hover:bg-[#68141F]'
+                    : 'bg-[#FFFDF9] text-[#851A26] border border-[#410407]/40 hover:bg-[#E6D6C5]'
+                }`}
+              >
+                {isBookmarked ? (
+                  <>
+                    <BookmarkCheck className="w-3.5 h-3.5" />
+                    <span>مكان وقوفكِ الحالي 🔖 (إلغاء العلامة)</span>
+                  </>
+                ) : (
+                  <>
+                    <Bookmark className="w-3.5 h-3.5" />
+                    <span>حفظ مكان وقوفي 🔖</span>
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -440,6 +526,13 @@ function AccordionCard({
   );
 }
 
+interface SanctuaryBookmark {
+  id: string;
+  title: string;
+  scrollY: number;
+  timestamp?: number;
+}
+
 export default function App() {
   const [unlocked, setUnlocked] = useState<boolean>(() => {
     return localStorage.getItem('sanctuary_unlocked') === 'true';
@@ -456,6 +549,41 @@ export default function App() {
     const saved = localStorage.getItem('monograph_font_size');
     return saved ? parseInt(saved, 10) : 21;
   });
+
+  // Persistent reading timer
+  const [readingSeconds, setReadingSeconds] = useState<number>(() => {
+    const saved = localStorage.getItem('sanctuary_reading_time');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+
+  // Bookmark state (saved in localStorage)
+  const [bookmark, setBookmark] = useState<SanctuaryBookmark | null>(() => {
+    try {
+      const saved = localStorage.getItem('sanctuary_bookmark');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  // Start reading timer when sanctuary unlocked
+  useEffect(() => {
+    if (!unlocked) return;
+    const timer = setInterval(() => {
+      setReadingSeconds((prev) => {
+        const next = prev + 1;
+        localStorage.setItem('sanctuary_reading_time', next.toString());
+        return next;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [unlocked]);
+
+  const formatReadingTime = (totalSeconds: number) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // Accordion state management (all collapsed by default)
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
@@ -755,6 +883,38 @@ export default function App() {
     }, 240);
   };
 
+  const handleToggleBookmark = (doorId: string) => {
+    if (bookmark?.id === doorId) {
+      localStorage.removeItem('sanctuary_bookmark');
+      setBookmark(null);
+    } else {
+      const door = MANUSCRIPT_DOORS[doorId];
+      const title = door ? door.title : doorId;
+      const elem = document.getElementById(doorId);
+      const scrollY = elem
+        ? elem.getBoundingClientRect().top + window.scrollY - 80
+        : window.scrollY;
+      const newBookmark: SanctuaryBookmark = {
+        id: doorId,
+        title,
+        scrollY: Math.round(scrollY),
+        timestamp: Date.now(),
+      };
+      localStorage.setItem('sanctuary_bookmark', JSON.stringify(newBookmark));
+      setBookmark(newBookmark);
+    }
+  };
+
+  const handleClearBookmark = () => {
+    localStorage.removeItem('sanctuary_bookmark');
+    setBookmark(null);
+  };
+
+  const handleResumeBookmark = () => {
+    if (!bookmark) return;
+    scrollToSection(bookmark.id);
+  };
+
   // Chapter drawer items mapping
   const chaptersInDrawer = [
     {
@@ -1024,6 +1184,50 @@ export default function App() {
           unlocked ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
+        {/* Resuming Bookmark Banner (إذا كانت توجد علامة توقّف محفوظة) */}
+        {bookmark && (
+          <div className="sticky top-3 z-[4000] mb-8">
+            <div className="flex items-center justify-between gap-3 p-3 sm:px-4 sm:py-2.5 rounded-2xl bg-[#FFFDF9]/95 backdrop-blur-md border-[1.8px] border-[#851A26] shadow-[4px_4px_0px_#851A26] text-[#410407]">
+              <button
+                type="button"
+                onClick={handleResumeBookmark}
+                className="flex items-center gap-2.5 flex-1 text-right min-w-0 cursor-pointer bg-transparent border-none outline-none group"
+                title="الانتقال فوراً إلى مكان التوقف الأخير"
+              >
+                <div className="w-8 h-8 rounded-full bg-[#851A26] text-[#FAF6F0] flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                  <Bookmark className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 min-w-0">
+                  <span className="text-xs sm:text-sm font-bold text-[#851A26] whitespace-nowrap">
+                    «أكملي من حيث توقفتِ:
+                  </span>
+                  <span className="text-xs sm:text-sm font-semibold truncate text-[#410407] group-hover:text-[#851A26] transition-colors">
+                    {bookmark.title} 🔖»
+                  </span>
+                </div>
+              </button>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleResumeBookmark}
+                  className="hidden sm:inline-flex px-3 py-1 rounded-full text-xs font-bold bg-[#851A26] text-[#FAF6F0] hover:bg-[#68141F] transition-colors cursor-pointer shadow-xs"
+                >
+                  انتقال ←
+                </button>
+                <button
+                  type="button"
+                  onClick={handleClearBookmark}
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-[#851A26]/70 hover:text-[#851A26] hover:bg-[#F6ECE8] cursor-pointer transition-colors"
+                  title="إزالة علامة التوقف"
+                  aria-label="إزالة العلامة"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Accordion Global Controls Bar */}
         <div className="flex items-center justify-between gap-3 mb-8 px-2">
           <div className="text-sm font-bold text-[#851A26]">
@@ -1145,6 +1349,8 @@ export default function App() {
                     id={doorId}
                     isOpen={!!expandedSections[doorId]}
                     onToggle={() => toggleSection(doorId)}
+                    isBookmarked={bookmark?.id === doorId}
+                    onBookmark={() => handleToggleBookmark(doorId)}
                   />
                 ))}
               </>
@@ -1176,6 +1382,8 @@ export default function App() {
                     id={doorId}
                     isOpen={!!expandedSections[doorId]}
                     onToggle={() => toggleSection(doorId)}
+                    isBookmarked={bookmark?.id === doorId}
+                    onBookmark={() => handleToggleBookmark(doorId)}
                   />
                 ))}
               </>
@@ -1219,6 +1427,8 @@ export default function App() {
                     id={doorId}
                     isOpen={!!expandedSections[doorId]}
                     onToggle={() => toggleSection(doorId)}
+                    isBookmarked={bookmark?.id === doorId}
+                    onBookmark={() => handleToggleBookmark(doorId)}
                   />
                 ))}
               </>
@@ -1262,6 +1472,8 @@ export default function App() {
                     id={doorId}
                     isOpen={!!expandedSections[doorId]}
                     onToggle={() => toggleSection(doorId)}
+                    isBookmarked={bookmark?.id === doorId}
+                    onBookmark={() => handleToggleBookmark(doorId)}
                   />
                 ))}
               </>
@@ -1305,6 +1517,8 @@ export default function App() {
                     id={doorId}
                     isOpen={!!expandedSections[doorId]}
                     onToggle={() => toggleSection(doorId)}
+                    isBookmarked={bookmark?.id === doorId}
+                    onBookmark={() => handleToggleBookmark(doorId)}
                   />
                 ))}
               </>
@@ -1348,6 +1562,8 @@ export default function App() {
                     id={doorId}
                     isOpen={!!expandedSections[doorId]}
                     onToggle={() => toggleSection(doorId)}
+                    isBookmarked={bookmark?.id === doorId}
+                    onBookmark={() => handleToggleBookmark(doorId)}
                   />
                 ))}
               </>
@@ -1391,6 +1607,8 @@ export default function App() {
                     id={doorId}
                     isOpen={!!expandedSections[doorId]}
                     onToggle={() => toggleSection(doorId)}
+                    isBookmarked={bookmark?.id === doorId}
+                    onBookmark={() => handleToggleBookmark(doorId)}
                   />
                 ))}
               </>
@@ -1440,19 +1658,6 @@ export default function App() {
           </div>
         </AccordionCard>
       </main>
-
-      {/* Embedded Background YouTube Ambient Player */}
-      {isAudioPlaying && (
-        <div className="sr-only" aria-hidden="true">
-          <iframe
-            width="1"
-            height="1"
-            src="https://www.youtube.com/embed/NIAiTDb6fug?autoplay=1&loop=1&playlist=NIAiTDb6fug&enablejsapi=1"
-            title="Ambient Piano Background Track"
-            allow="autoplay"
-          />
-        </div>
-      )}
 
       {/* Floating Bottom Navigation & Controls Dock (Responsive Mobile-First) */}
       {unlocked && (
@@ -1517,6 +1722,34 @@ export default function App() {
             >
               أ+
             </button>
+          </div>
+
+          <span className="w-[1px] h-3.5 sm:h-4 bg-[#410407]/30 shrink-0" />
+
+          {/* Bookmark Quick Jump Button (إذا كانت توجد علامة محفوظة) */}
+          {bookmark && (
+            <>
+              <button
+                type="button"
+                onClick={handleResumeBookmark}
+                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all bg-[#851A26] text-[#FAF6F0] border border-[#410407] shadow-[2px_2px_0px_#410407] hover:bg-[#68141F] outline-none cursor-pointer shrink-0"
+                title={`مكاني المحفوظ: ${bookmark.title} — انقري للذهاب`}
+                aria-label="الانتقال إلى علامة التوقف"
+              >
+                <Bookmark className="w-3.5 h-3.5" />
+                <span className="whitespace-nowrap hidden sm:inline">علامتي</span>
+              </button>
+              <span className="w-[1px] h-3.5 sm:h-4 bg-[#410407]/30 shrink-0" />
+            </>
+          )}
+
+          {/* Reading Timer (عداد وقت القراءة الهادئ) */}
+          <div
+            className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold bg-[#FAF6F0] text-[#851A26] border border-[#410407]/40 shadow-[2px_2px_0px_#410407] tabular-nums shrink-0 select-none"
+            title="وقت القراءة المستغرق في الملاذ"
+          >
+            <Clock className="w-3 h-3 text-[#851A26]" />
+            <span>{formatReadingTime(readingSeconds)}</span>
           </div>
 
           <span className="w-[1px] h-3.5 sm:h-4 bg-[#410407]/30 shrink-0" />
