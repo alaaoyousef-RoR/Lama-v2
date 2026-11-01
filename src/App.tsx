@@ -942,7 +942,7 @@ export default function App() {
     {
       title: 'الفصل الثاني: لغتنا التي لا يفهمها أحد',
       id: 'chapter-2',
-      doors: Array.from({ length: 6 }, (_, i) => ({
+      doors: Array.from({ length: 7 }, (_, i) => ({
         id: `ch2-door-${i + 1}`,
         title: MANUSCRIPT_DOORS[`ch2-door-${i + 1}`]?.title || `الباب ${i + 1}`,
       })),
@@ -1400,12 +1400,12 @@ export default function App() {
           id="chapter-2"
           badge="الفصل الثاني"
           title="الفصل الثاني: لغتنا التي لا يفهمها أحد"
-          subtitle="٦ أبواب في الشفرات والخصوصية"
+          subtitle="٧ أبواب في الشفرات والخصوصية"
           isOpen={!!expandedSections['chapter-2']}
           onToggle={() => toggleSection('chapter-2')}
         >
           {(() => {
-            const doorIds = Array.from({ length: 6 }, (_, i) => `ch2-door-${i + 1}`);
+            const doorIds = Array.from({ length: 7 }, (_, i) => `ch2-door-${i + 1}`);
             return (
               <>
                 <ChapterDoorsControlBar
